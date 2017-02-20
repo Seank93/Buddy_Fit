@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="ie.seankehoe.buddyfit.MainActivity"
+    android:background="@drawable/grassbg">
+
+    <View
+        android:id="@+id/colored_bar"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="#cccccccc"
+        android:layout_marginTop="120dp"
+        android:layout_marginLeft="23dp"/>
+
+    <Button
+        android:text="Authorise with Fitbit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:onClick="fitAuth"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Refresh Stats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnStats"
+        android:layout_above="@+id/button"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/JsonItem"
+        android:text="0001"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="130dp"
+        android:layout_marginBottom="69dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginStart="100dp"
+        android:layout_toRightOf="@+id/textViewSteps"
+
+    />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/charproto"
+        android:id="@+id/imageViewAlly"
+        android:rotationY="180"
+        android:layout_marginBottom="16dp"
+        android:layout_above="@+id/btnStats"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/char_2"
+        android:id="@+id/imageViewEnemy"
+        android:layout_alignTop="@+id/imageViewAlly"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Steps Taken Today: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewSteps"
+        android:layout_alignBaseline="@+id/JsonItem"
+        android:layout_alignBottom="@+id/JsonItem"
+        android:layout_alignRight="@+id/imageViewAlly"
+        android:layout_alignEnd="@+id/imageViewAlly"
+        android:layout_marginRight="18dp"
+        android:layout_marginEnd="18dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonsoundon"
+        android:background="@drawable/speaker"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/buttonsoundoff"
+        android:layout_alignLeft="@+id/JsonItem"
+        android:layout_alignStart="@+id/JsonItem"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="17dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonsoundoff"
+        android:background="@drawable/speakeroff"
+        android:layout_above="@+id/button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/btnStats"
+        android:layout_alignLeft="@+id/JsonItem"
+        android:layout_alignStart="@+id/JsonItem"
+        android:layout_marginLeft="17dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="14dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/bftitle"
+        android:id="@+id/imageViewTitle"
+        android:layout_marginBottom="31dp"
+        android:layout_above="@+id/textViewSteps"
+        android:layout_alignLeft="@+id/button"
+        android:layout_alignStart="@+id/button" />
+
+    <TextView
+        android:text="Distance covered today: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/distanceText"
+        android:layout_below="@+id/HeartText"
+        android:layout_alignLeft="@+id/HeartText"
+        android:layout_alignStart="@+id/HeartText" />
+
+    <TextView
+        android:text="Todays Heart Rate: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/HeartText"
+        android:layout_below="@+id/textViewSteps"
+        android:layout_alignLeft="@+id/textViewSteps"
+        android:layout_alignStart="@+id/textViewSteps" />
+
+    <TextView
+        android:id="@+id/textViewHeart"
+        android:text="0002"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/distanceText"
+        android:layout_alignLeft="@+id/JsonItem"
+        android:layout_alignStart="@+id/JsonItem" />
+
+    <TextView
+        android:id="@+id/textViewDistanceNumber"
+        android:text="0003"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/distanceText"
+        android:layout_alignBottom="@+id/distanceText"
+        android:layout_alignLeft="@+id/textViewHeart"
+        android:layout_alignStart="@+id/textViewHeart" />
+
+    <TextView
+        android:text="Calories burned:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/caloriesText"
+        android:layout_below="@+id/floorsNumber"
+        android:layout_alignLeft="@+id/distanceText"
+        android:layout_alignStart="@+id/distanceText" />
+
+    <TextView
+        android:text="Floors climbed today"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/floorsText"
+        android:layout_below="@+id/distanceText"
+        android:layout_alignLeft="@+id/caloriesText"
+        android:layout_alignStart="@+id/caloriesText" />
+
+    <TextView
+        android:id="@+id/caloriesNumber"
+        android:text="0003"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/floorsText"
+        android:layout_alignLeft="@+id/textViewDistanceNumber"
+        android:layout_alignStart="@+id/textViewDistanceNumber" />
+
+    <TextView
+        android:id="@+id/floorsNumber"
+        android:text="0003"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewDistanceNumber"
+        android:layout_alignLeft="@+id/caloriesNumber"
+        android:layout_alignStart="@+id/caloriesNumber" />
+
+    <Button
+        android:text="@string/button_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/profile_btn"
+        android:onClick="goToProfile"/>
+
+    <TextView
+        android:text="PLAYER LEVEL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageViewAlly"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textView2" />
+
+    <TextView
+        android:text="10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/playerLevelText"
+        android:layout_alignTop="@+id/imageViewEnemy"
+        android:layout_toLeftOf="@+id/caloriesNumber"
+        android:layout_toStartOf="@+id/caloriesNumber" />
+
+
+</RelativeLayout>
