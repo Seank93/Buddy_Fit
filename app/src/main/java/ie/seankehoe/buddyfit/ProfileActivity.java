@@ -29,7 +29,7 @@ DatabaseHelper myDb;
         editUsername = (EditText)findViewById(R.id.editText_username);
         editAge = (EditText)findViewById(R.id.editText_age);
         editGender = (RadioGroup)findViewById(R.id.editGender);
-        deleteBtn = (Button)findViewById(R.id.deleteBtn);
+
 
         getProfile();
     }

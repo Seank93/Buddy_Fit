@@ -12,213 +12,149 @@
     tools:context="ie.seankehoe.buddyfit.MainActivity"
     android:background="@drawable/grassbg">
 
-    <View
-        android:id="@+id/colored_bar"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="#cccccccc"
-        android:layout_marginTop="120dp"
-        android:layout_marginLeft="23dp"/>
-
     <Button
-        android:text="Authorise with Fitbit"
+        android:text="@string/button_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button"
-        android:onClick="fitAuth"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="Refresh Stats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnStats"
-        android:layout_above="@+id/button"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:id="@+id/JsonItem"
-        android:text="0001"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="130dp"
-        android:layout_marginBottom="69dp"
-        android:layout_marginLeft="23dp"
-        android:layout_marginStart="100dp"
-        android:layout_toRightOf="@+id/textViewSteps"
-
-    />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/charproto"
-        android:id="@+id/imageViewAlly"
-        android:rotationY="180"
-        android:layout_marginBottom="16dp"
-        android:layout_above="@+id/btnStats"
+        android:id="@+id/profile_btn"
+        android:onClick="goToProfile"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/char_2"
-        android:id="@+id/imageViewEnemy"
-        android:layout_alignTop="@+id/imageViewAlly"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:text="Steps Taken Today: "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewSteps"
-        android:layout_alignBaseline="@+id/JsonItem"
-        android:layout_alignBottom="@+id/JsonItem"
-        android:layout_alignRight="@+id/imageViewAlly"
-        android:layout_alignEnd="@+id/imageViewAlly"
-        android:layout_marginRight="18dp"
-        android:layout_marginEnd="18dp" />
-
     <Button
+        android:text="Unleash Power!"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonsoundon"
-        android:background="@drawable/speaker"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/buttonsoundoff"
-        android:layout_alignLeft="@+id/JsonItem"
-        android:layout_alignStart="@+id/JsonItem"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="17dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonsoundoff"
-        android:background="@drawable/speakeroff"
-        android:layout_above="@+id/button"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/btnStats"
-        android:layout_alignLeft="@+id/JsonItem"
-        android:layout_alignStart="@+id/JsonItem"
-        android:layout_marginLeft="17dp"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="14dp" />
+        android:id="@+id/btnStats"
+        android:layout_below="@+id/profile_btn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/profile_btn"
+        android:layout_alignEnd="@+id/profile_btn" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/bftitle"
-        android:id="@+id/imageViewTitle"
-        android:layout_marginBottom="31dp"
-        android:layout_above="@+id/textViewSteps"
-        android:layout_alignLeft="@+id/button"
-        android:layout_alignStart="@+id/button" />
-
-    <TextView
-        android:text="Distance covered today: "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/distanceText"
-        android:layout_below="@+id/HeartText"
-        android:layout_alignLeft="@+id/HeartText"
-        android:layout_alignStart="@+id/HeartText" />
-
-    <TextView
-        android:text="Todays Heart Rate: "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/HeartText"
-        android:layout_below="@+id/textViewSteps"
-        android:layout_alignLeft="@+id/textViewSteps"
-        android:layout_alignStart="@+id/textViewSteps" />
-
-    <TextView
-        android:id="@+id/textViewHeart"
-        android:text="0002"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/distanceText"
-        android:layout_alignLeft="@+id/JsonItem"
-        android:layout_alignStart="@+id/JsonItem" />
-
-    <TextView
-        android:id="@+id/textViewDistanceNumber"
-        android:text="0003"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/distanceText"
-        android:layout_alignBottom="@+id/distanceText"
-        android:layout_alignLeft="@+id/textViewHeart"
-        android:layout_alignStart="@+id/textViewHeart" />
-
-    <TextView
-        android:text="Calories burned:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/caloriesText"
-        android:layout_below="@+id/floorsNumber"
-        android:layout_alignLeft="@+id/distanceText"
-        android:layout_alignStart="@+id/distanceText" />
-
-    <TextView
-        android:text="Floors climbed today"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/floorsText"
-        android:layout_below="@+id/distanceText"
-        android:layout_alignLeft="@+id/caloriesText"
-        android:layout_alignStart="@+id/caloriesText" />
-
-    <TextView
-        android:id="@+id/caloriesNumber"
-        android:text="0003"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/floorsText"
-        android:layout_alignLeft="@+id/textViewDistanceNumber"
-        android:layout_alignStart="@+id/textViewDistanceNumber" />
-
-    <TextView
-        android:id="@+id/floorsNumber"
-        android:text="0003"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewDistanceNumber"
-        android:layout_alignLeft="@+id/caloriesNumber"
-        android:layout_alignStart="@+id/caloriesNumber" />
-
-    <Button
-        android:text="@string/button_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/btnStats"
+        android:layout_toEndOf="@+id/btnStats"
+        android:id="@+id/imageView"
+        android:layout_alignBottom="@+id/btnStats" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/char_2"
+        android:layout_alignTop="@+id/imageViewAlly"
+        android:layout_toRightOf="@+id/imageViewAlly"
+        android:layout_toEndOf="@+id/imageViewAlly"
+        android:id="@+id/imageViewEnemy" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_below="@+id/imageViewEnemy"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/profile_btn"
-        android:onClick="goToProfile"/>
+        android:id="@+id/progressHP"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="visible"
+        android:rotationY="180" />
 
     <TextView
-        android:text="PLAYER LEVEL"
+        android:text="maxHp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageViewAlly"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/textView2" />
+        android:layout_below="@+id/progressHP"
+        android:layout_toRightOf="@+id/hpNumber"
+        android:layout_toEndOf="@+id/hpNumber"
+        android:id="@+id/hpMax" />
 
     <TextView
-        android:text="10"
+        android:text="hp /"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/playerLevelText"
-        android:layout_alignTop="@+id/imageViewEnemy"
-        android:layout_toLeftOf="@+id/caloriesNumber"
-        android:layout_toStartOf="@+id/caloriesNumber" />
+        android:id="@+id/hpNumber"
+        android:layout_alignBaseline="@+id/hpMax"
+        android:layout_alignBottom="@+id/hpMax"
+        android:layout_centerHorizontal="true" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/char_3"
+        android:id="@+id/imageViewAlly"
+        android:layout_marginBottom="89dp"
+        android:rotationY="180"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Stage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:textStyle="normal|bold"
+        android:textSize="30sp"
+        android:layout_marginTop="21dp"
+        android:layout_below="@+id/imageView"
+        android:layout_toLeftOf="@+id/imageViewEnemy"
+        android:layout_toStartOf="@+id/imageViewEnemy" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/current_stage"
+        android:text="999"
+        android:textAppearance="@android:style/TextAppearance"
+        android:textAlignment="viewStart"
+        android:textStyle="normal|bold"
+        android:paddingTop="0dp"
+        android:textSize="30sp"
+        android:textColor="@color/common_google_signin_btn_text_light_default"
+        android:layout_alignTop="@+id/textView3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/textView3"
+        android:layout_alignBottom="@+id/textView3"
+        android:paddingLeft="10dp" />
+
+    <Button
+        android:text="Deal 50"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/deal50"
+        android:onClick="deal50"/>
+
+    <Button
+        android:text="Deal 10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/deal50"
+        android:layout_toLeftOf="@+id/deal50"
+        android:layout_toStartOf="@+id/deal50"
+        android:id="@+id/deal10"
+        android:onClick="deal10"/>
+
+    <Button
+        android:text="Deal 1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/deal10"
+        android:layout_toLeftOf="@+id/deal10"
+        android:layout_toStartOf="@+id/deal10"
+        android:id="@+id/deal1"
+        android:onClick="deal1"/>
 
 </RelativeLayout>

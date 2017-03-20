@@ -1,18 +1,22 @@
 package ie.seankehoe.buddyfit;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +42,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static android.R.attr.level;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -46,12 +52,33 @@ public class MainActivity extends AppCompatActivity {
      */
     DatabaseHelper myDb;
     private GoogleApiClient client;
+
     private TextView totalSteps;
     private TextView totalFloors;
-    private TextView totalCalories,playerLevel;
+    private TextView totalCalories,playerLevel,currentStageText;
+    private Button deal1,deal10,deal50;
     private DailyStats mCurrentStats;
+    private ProgressBar progressHP;
+    protected int delay = 300;
+
     ImageView imageViewAlly;
     public static final String TAG = MainActivity.class.getSimpleName();
+
+    //enemy variables
+    public int currentEnemy = 3;
+
+    TextView hpNumber;
+    TextView hpMax;
+
+    //Stage Variable
+    public int currentStage = 1;
+    public String currentStageStr;
+
+    //damage Variables
+    public int damageTotal = 0;
+
+
+
 
 
     @Override
@@ -62,72 +89,85 @@ public class MainActivity extends AppCompatActivity {
 
         //Checks for user acount on Startup
         Cursor result = myDb.getTableData();
-        if(result.getCount() ==0) {
+        if (result.getCount() == 0) {
             showMessage("No Profile Found", "Lets Set you up with one!");
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
         }
 
+
         Button btnStats = (Button) findViewById(R.id.btnStats);
-        totalSteps = (TextView)findViewById(R.id.JsonItem);
-        totalFloors = (TextView) findViewById(R.id.floorsNumber);
-        totalCalories = (TextView) findViewById(R.id.caloriesNumber);
+        Button deal1 = (Button) findViewById(R.id.deal1);
+        Button deal10 = (Button) findViewById(R.id.deal10);
+        Button deal50 = (Button) findViewById(R.id.deal50);
+
         imageViewAlly = (ImageView) findViewById(R.id.imageViewAlly);
+
+        hpNumber = (TextView) findViewById(R.id.hpNumber);
+        hpNumber.setText(getEnemyCurrentHp() + " / ");
+
+        hpMax = (TextView) findViewById(R.id.hpMax);
+        hpMax.setText(getEnemyCurrentMax());
+
         imageViewAlly.setImageResource(R.drawable.char_1);
-        playerLevel = (TextView) findViewById(R.id.playerLevelText);
+        progressHP = (ProgressBar) findViewById(R.id.progressHP);
+        currentStageText = (TextView) findViewById(R.id.current_stage);
+
+        currentStageStr = getStage();
+        currentStageText.setText(currentStageStr);
         genderCheck();
-        levelCheck();
+
+
 
         //Music
         final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.eightbitadventure);
+    }
 
-        Button play = (Button) findViewById(R.id.buttonsoundon);
-        Button stop = (Button) findViewById(R.id.buttonsoundoff);
-
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaPlayer.start();
-            }
-        });
-
-        stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaPlayer.pause();
-            }
-        });
         //music
 
+        /** Button play = (Button) findViewById(R.id.buttonsoundon);
+         Button stop = (Button) findViewById(R.id.buttonsoundoff);
 
+         play.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+        mediaPlayer.start();
+        }
+        });
+         stop.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+        mediaPlayer.pause();
+        }
+        });
+         **/
 
-
+    public static void unleashPower() {
         //requests
         String fitUrl = "https://api.fitbit.com/1/user/-/activities/date/today.json";
         String fitUrlHeart = "https://api.fitbit.com/1/user/-/activities/heart/date/today/1d.json";
 
         /**final Request requestStats = new Request.Builder()
-                .url(fitUrl)
-                .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0REY0Tk0iLCJhdWQiOiIyMjdXTVkiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyc29jIHJzZXQgcmFjdCBybG9jIHJ3ZWkgcmhyIHJudXQgcnBybyByc2xlIiwiZXhwIjoxNDg1NTIyNTk2LCJpYXQiOjE0ODQ5MTc3OTZ9.7_j3Ao7hk1NsGI-1cpC0xG-kt4CyvT_4Nff_ZfaMicg")
-                .build();
+         .url(fitUrl)
+         .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0REY0Tk0iLCJhdWQiOiIyMjdXTVkiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyc29jIHJzZXQgcmFjdCBybG9jIHJ3ZWkgcmhyIHJudXQgcnBybyByc2xlIiwiZXhwIjoxNDg1NTIyNTk2LCJpYXQiOjE0ODQ5MTc3OTZ9.7_j3Ao7hk1NsGI-1cpC0xG-kt4CyvT_4Nff_ZfaMicg")
+         .build();
 
-        final Request requestHeart = new Request.Builder()
-                .url(fitUrlHeart)
-                .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0REY0Tk0iLCJhdWQiOiIyMjdXTVkiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyc29jIHJzZXQgcmFjdCBybG9jIHJ3ZWkgcmhyIHJudXQgcnBybyByc2xlIiwiZXhwIjoxNDg1NTIyNTk2LCJpYXQiOjE0ODQ5MTc3OTZ9.7_j3Ao7hk1NsGI-1cpC0xG-kt4CyvT_4Nff_ZfaMicg")
-                .build();
+         final Request requestHeart = new Request.Builder()
+         .url(fitUrlHeart)
+         .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0REY0Tk0iLCJhdWQiOiIyMjdXTVkiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyc29jIHJzZXQgcmFjdCBybG9jIHJ3ZWkgcmhyIHJudXQgcnBybyByc2xlIiwiZXhwIjoxNDg1NTIyNTk2LCJpYXQiOjE0ODQ5MTc3OTZ9.7_j3Ao7hk1NsGI-1cpC0xG-kt4CyvT_4Nff_ZfaMicg")
+         .build();
 
+         getStats(requestStats);
+         getStats(requestHeart);
+         btnStats.setOnClickListener(new View.OnClickListener(){
+
+        @Override public void onClick(View v) {
         getStats(requestStats);
         getStats(requestHeart);
-        btnStats.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                getStats(requestStats);
-                getStats(requestHeart);
-            }
+        }
         }); **/
         //End of Requests
     }
+
+
 
 
 
@@ -192,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
     public void goToProfile(View view){
-        Intent startNewActivity = new Intent(this, ProfileActivity.class);
+        Intent startNewActivity = new Intent(this, StatisticsActivity.class);
         startActivity(startNewActivity);
     }
     public void showMessage(String title, String Message){
@@ -205,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
     public void genderCheck(){
         String gender = "Female";
         Cursor result = myDb.getGender();
-        imageViewAlly = (ImageView) findViewById(R.id.imageViewAlly);
+
 
         if(result.moveToFirst()){
             do{
@@ -221,20 +261,6 @@ public class MainActivity extends AppCompatActivity {
             imageViewAlly.setImageResource(R.drawable.char_3);
         }
     }
-    private void levelCheck(){
-        String level = "10";
-        Cursor result = myDb.getLevel();
-        imageViewAlly = (ImageView) findViewById(R.id.imageViewAlly);
-
-        if(result.moveToFirst()){
-            do{
-                level = result.getString(result.getColumnIndex("level"));
-            }while (result.moveToNext());
-        }
-        result.close();
-        playerLevel = (TextView)findViewById(R.id.playerLevelText);
-        playerLevel.setText(level);
-     }
 
     protected void onResume(){
         super.onResume();
@@ -249,6 +275,131 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Log.i(TAG, "On Stop .....");
+    }
+
+
+
+
+    //Methods Involving the Updating and retrieval of the current stage
+    public void updateStage(){
+        int currentstage = 1234;
+        String stageStr = getStage();
+
+        currentstage = Integer.parseInt(stageStr);
+        currentstage ++;
+        currentStageText.setText(String.valueOf(currentstage));
+        myDb.setStage(currentstage);
+        updateCurrentMax();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                finish();
+                Intent i3 = new Intent(MainActivity.this, StageClear.class);
+                startActivity(i3);
+            }
+        }, delay);
+    }
+    public String getStage(){
+        String StageString = "100";
+        Cursor stagecursor = myDb.getStage();
+        if(stagecursor.moveToFirst()){
+            do{
+                StageString = stagecursor.getString(stagecursor.getColumnIndex("currentstage"));
+            }while (stagecursor.moveToNext());
+        }
+        stagecursor.close();
+    return StageString;
+    }
+
+    // ***************************************************************************************
+
+    //Methods Involving the Updating and retrieval of enemy hp and details
+
+
+    public String getEnemyHpBase(){
+        String hpString = "50";
+        Cursor hpcursor = myDb.getEnemy(currentEnemy);
+        if(hpcursor.moveToFirst()){
+            do{
+                hpString = hpcursor.getString(hpcursor.getColumnIndex("baseHp"));
+            }while (hpcursor.moveToNext());
+        }
+        hpcursor.close();
+        return hpString;
+    }
+    public String getEnemyCurrentMax(){
+        String hpString = "50";
+        Cursor hpcursor = myDb.getEnemy(currentEnemy);
+        if(hpcursor.moveToFirst()){
+            do{
+                hpString = hpcursor.getString(hpcursor.getColumnIndex("currentMax"));
+            }while (hpcursor.moveToNext());
+        }
+        hpcursor.close();
+        return hpString;
+    }
+    public String getEnemyCurrentHp(){
+        String hpString = "50";
+        Cursor hpcursor = myDb.getEnemy(currentEnemy);
+        if(hpcursor.moveToFirst()){
+            do{
+                hpString = hpcursor.getString(hpcursor.getColumnIndex("currentHp"));
+            }while (hpcursor.moveToNext());
+        }
+        hpcursor.close();
+        return hpString;
+    }
+    public void updateCurrentMax(){
+        String base = getEnemyHpBase();
+        int newmax = Integer.parseInt(base);
+
+        newmax = Integer.parseInt(getStage())*newmax;
+        hpMax.setText(String.valueOf(newmax));
+        hpNumber.setText(String.valueOf(newmax));
+        myDb.setNewMax(newmax, currentEnemy);
+        myDb.setCurrentHp(newmax, currentEnemy);
+
+    }
+    public void updateEnemyHp(int calcdamage){
+        String enemyhp = getEnemyCurrentHp();
+        int currentEnemyHp = Integer.parseInt(enemyhp);
+        int currentEnemyMax = Integer.parseInt(getEnemyCurrentMax());
+
+        currentEnemyHp = currentEnemyHp - calcdamage;
+
+        if((currentEnemyHp == currentEnemyMax) || (currentEnemyHp <= 0))
+        {
+
+            hpNumber.setText(String.valueOf(currentEnemyHp +" / "));
+            myDb.setCurrentHp(currentEnemyHp,currentEnemy);
+            updateStage();
+        }
+        else {
+            hpNumber.setText(String.valueOf(currentEnemyHp +" / "));
+           myDb.setCurrentHp(currentEnemyHp, currentEnemy);
+        }
+    }
+
+    // ****************************************************************************************
+
+    //*****************************************************************************************
+    //Damage dealing test buttons
+    public void deal1(View view){
+        int deal1 = 1;
+        updateEnemyHp(deal1);
+    }
+    public void deal10(View view){
+        int deal10 = 10;
+        updateEnemyHp(deal10);
+    }
+    public void deal50(View view){
+        int deal50 = 50;
+        updateEnemyHp(deal50);
+    }
+
+    public void continueScreen(View view){
+        Intent startNewActivity = new Intent(this,StageClear.class);
+        startActivity(startNewActivity);
     }
 
 };
