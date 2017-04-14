@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="ie.seankehoe.buddyfit.MainActivity"
+    android:background="?attr/colorPrimary">
+
+    <TextView
+        android:text="Edit Your Buddy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="86dp"
+        android:id="@+id/headtext"
+        android:textSize="24sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/head1"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/head" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/body2"
+        android:layout_alignTop="@+id/head"
+        android:layout_alignLeft="@+id/head"
+        android:layout_alignStart="@+id/head"
+        android:id="@+id/body" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/togglearrow"
+        android:layout_alignTop="@+id/head"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/hairleft"
+        android:layout_alignBottom="@+id/head"
+        android:layout_toLeftOf="@+id/head"
+        android:layout_toStartOf="@+id/head"
+        android:layout_marginBottom="125dp"
+        android:rotationX="180"
+        android:onClick="hairleft"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/togglearrow"
+        android:layout_alignTop="@+id/hairleft"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="68dp"
+        android:id="@+id/headleft"
+        android:layout_alignBottom="@+id/head"
+        android:layout_toLeftOf="@+id/head"
+        android:layout_toStartOf="@+id/head"
+        android:layout_marginBottom="51dp"
+        android:rotationX="180"
+        android:onClick="headleft"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/hair1"
+        android:id="@+id/hair"
+        android:layout_alignTop="@+id/head"
+        android:layout_toRightOf="@+id/hairleft"
+        android:layout_toEndOf="@+id/hairleft" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/togglearrow"
+        android:id="@+id/hairright"
+        android:layout_alignTop="@+id/head"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/headleft"
+        android:layout_toRightOf="@+id/head"
+        android:layout_toEndOf="@+id/head"
+        android:layout_marginBottom="71dp"
+        android:onClick="hairright"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/togglearrow"
+        android:layout_alignTop="@+id/headleft"
+        android:layout_toRightOf="@+id/head"
+        android:layout_toEndOf="@+id/head"
+        android:id="@+id/headright"
+        android:layout_alignBottom="@+id/headleft"
+        android:onClick="headright"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/togglearrow"
+        android:layout_below="@+id/headright"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/bodyleft"
+        android:layout_toLeftOf="@+id/head"
+        android:layout_toStartOf="@+id/head"
+        android:layout_alignBottom="@+id/head"
+        android:rotationX="180"
+        android:scaleX="1.3"
+        android:scaleY="1.3"
+        android:onClick="bodyleft"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/togglearrow"
+        android:layout_below="@+id/headright"
+        android:layout_toRightOf="@+id/head"
+        android:layout_toEndOf="@+id/head"
+        android:id="@+id/bodyright"
+        android:layout_alignBottom="@+id/head"
+        android:scaleX="1.3"
+        android:scaleY="1.3"
+        android:onClick="bodyright"/>
+
+    <Button
+        android:text="Cancel Changes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="29dp"
+        android:id="@+id/cancelbtn"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="goToProfile"/>
+
+    <Button
+        android:text="Accept Changes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/save"
+        android:layout_alignBaseline="@+id/cancelbtn"
+        android:layout_alignBottom="@+id/cancelbtn"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="saveToProfile"/>
+
+</RelativeLayout>

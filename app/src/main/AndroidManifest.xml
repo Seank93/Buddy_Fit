@@ -44,7 +44,11 @@
 
         <activity android:name=".ProfileActivity" />
         <activity android:name=".StatisticsActivity" />
-        <activity android:name=".StageClear"></activity>
+        <activity android:name=".StageClear" />
+        <activity
+            android:name=".EditBuddy"
+            android:label="@string/title_activity_edit_buddy"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

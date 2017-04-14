@@ -43,58 +43,6 @@
         android:id="@+id/imageView"
         android:layout_alignBottom="@+id/btnStats" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/char_2"
-        android:layout_alignTop="@+id/imageViewAlly"
-        android:layout_toRightOf="@+id/imageViewAlly"
-        android:layout_toEndOf="@+id/imageViewAlly"
-        android:id="@+id/imageViewEnemy" />
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_below="@+id/imageViewEnemy"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/progressHP"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="visible"
-        android:rotationY="180" />
-
-    <TextView
-        android:text="maxHp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/progressHP"
-        android:layout_toRightOf="@+id/hpNumber"
-        android:layout_toEndOf="@+id/hpNumber"
-        android:id="@+id/hpMax" />
-
-    <TextView
-        android:text="hp /"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/hpNumber"
-        android:layout_alignBaseline="@+id/hpMax"
-        android:layout_alignBottom="@+id/hpMax"
-        android:layout_centerHorizontal="true" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/char_3"
-        android:id="@+id/imageViewAlly"
-        android:layout_marginBottom="89dp"
-        android:rotationY="180"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <TextView
         android:text="Stage"
         android:layout_width="wrap_content"
@@ -104,8 +52,11 @@
         android:textSize="30sp"
         android:layout_marginTop="21dp"
         android:layout_below="@+id/imageView"
-        android:layout_toLeftOf="@+id/imageViewEnemy"
-        android:layout_toStartOf="@+id/imageViewEnemy" />
+        android:background="#77ffffff"
+        android:textAlignment="textEnd"
+        android:layout_toLeftOf="@+id/current_stage"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -121,11 +72,12 @@
         android:textSize="30sp"
         android:textColor="@color/common_google_signin_btn_text_light_default"
         android:layout_alignTop="@+id/textView3"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/textView3"
         android:layout_alignBottom="@+id/textView3"
-        android:paddingLeft="10dp" />
+        android:paddingLeft="10dp"
+        android:background="#77ffffff"
+        android:layout_toLeftOf="@+id/deal50"
+        android:layout_toEndOf="@+id/hpNumber"
+        android:layout_toRightOf="@+id/hpNumber" />
 
     <Button
         android:text="Deal 50"
@@ -135,17 +87,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:id="@+id/deal50"
-        android:onClick="deal50"/>
-
-    <Button
-        android:text="Deal 10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/deal50"
-        android:layout_toLeftOf="@+id/deal50"
-        android:layout_toStartOf="@+id/deal50"
-        android:id="@+id/deal10"
-        android:onClick="deal10"/>
+        android:onClick="deal50"
+        android:visibility="invisible" />
 
     <Button
         android:text="Deal 1"
@@ -155,6 +98,93 @@
         android:layout_toLeftOf="@+id/deal10"
         android:layout_toStartOf="@+id/deal10"
         android:id="@+id/deal1"
-        android:onClick="deal1"/>
+        android:onClick="deal1"
+        android:visibility="invisible" />
+
+    <Button
+        android:text="Deal 10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/deal10"
+        android:onClick="deal10"
+        android:visibility="invisible"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/deal50"
+        android:layout_toStartOf="@+id/deal50" />
+
+    <TextView
+        android:text="maxHp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/hpMax"
+        android:background="#99ffffff"
+        android:layout_above="@+id/deal10"
+        android:layout_toRightOf="@+id/hpNumber"
+        android:layout_toEndOf="@+id/hpNumber"
+        android:textStyle="normal|bold"
+        android:textSize="36sp" />
+
+    <TextView
+        android:text="hp /"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/hpNumber"
+        android:background="#99ffffff"
+        android:textStyle="normal|bold"
+        android:textSize="36sp"
+        android:layout_above="@+id/deal1"
+        android:layout_toLeftOf="@+id/deal10"
+        android:layout_toStartOf="@+id/deal10" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/body2"
+        android:id="@+id/buddybody"
+        android:layout_above="@+id/hpMax"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:rotationX="0"
+        android:rotationY="180"
+        android:translationY="0dp"
+        android:scaleX="1.2"
+        android:scaleY="1.2" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/head1"
+        android:id="@+id/buddyhead"
+        android:layout_alignTop="@+id/buddybody"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:rotationX="0"
+        android:rotationY="180"
+        android:translationY="0dp"
+        android:scaleX="1.2"
+        android:scaleY="1.2" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/hair1"
+        android:id="@+id/buddyhair"
+        android:layout_alignTop="@+id/buddybody"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:rotationX="0"
+        android:rotationY="180"
+        android:translationY="0dp"
+        android:scaleX="1.2"
+        android:scaleY="1.2" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/enemyc_1"
+        android:layout_alignTop="@+id/buddybody"
+        android:layout_toRightOf="@+id/buddybody"
+        android:layout_toEndOf="@+id/buddybody"
+        android:id="@+id/currentenemy" />
 
 </RelativeLayout>

@@ -53,15 +53,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public DatabaseHelper(Context context) {
-        super(context,DATABASE_NAME, null, 7);
+        super(context,DATABASE_NAME, null, 9);
     }
+
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + USER_TABLE +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, age INTEGER, total_steps INTEGER, total_calories DOUBLE, gender TEXT DEFAULT 'Female')");
         db.execSQL("create table " + ENEMY_TABLE +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, baseHp INTEGER, currentMax INTEGER, currentHp INTEGER, weakness TEXT)");
         db.execSQL("create table " + STAGE_TABLE +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, currentstage INTEGER DEFAULT 1)");
-        db.execSQL("create table " + BUDDY_TABLE +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, idhead INTEGER DEFAULT 1, idBody INTEGER DEFAULT 1, idLegs INTEGER DEFAULT 1, level INTEGER DEFAULT 1, stepSTR INTEGER DEFAULT 1)");
+        db.execSQL("create table " + BUDDY_TABLE +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, idHead INTEGER DEFAULT 1, idBody INTEGER DEFAULT 1, idLegs INTEGER DEFAULT 1, level INTEGER DEFAULT 1, stepSTR INTEGER DEFAULT 1)");
 
         db.execSQL("insert into " + ENEMY_TABLE + " values(1,'fatcat',100,100,100,'rain')");
         db.execSQL("insert into " + ENEMY_TABLE + " values(2,'fatlizard',140,140,140,'sun')");
@@ -69,6 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("insert into " + ENEMY_TABLE + " values(4,'fatbat',180,180,180,'sun')");
 
         db.execSQL("insert into " + STAGE_TABLE + " values(1, 1)");
+        db.execSQL("insert into " + BUDDY_TABLE + " values(1,1,1,1,1,1)");
     }
 
     @Override
@@ -146,6 +149,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor result = db.rawQuery("select * from "+ENEMY_TABLE + " where id = "+id,null);
         return result;
     }
+    public Cursor getBody(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor result = db.rawQuery("select * from "+BUDDY_TABLE,null);
+        return result;
+    }
     public Cursor getEnemyHp(int id){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor result = db.rawQuery("select currentHp from "+ENEMY_TABLE + " where id = "+id,null);
@@ -185,6 +193,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ENEMY_COL_5,newcurrent);
         long result = db.update(ENEMY_TABLE,contentValues, "ID = "+id, null);
+        if(result == -1){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+    public boolean setNewLook(int hair, int body, int head){
+        String newHair = Integer.toString(hair);
+        String newBody = Integer.toString(body);
+        String newHead = Integer.toString(head);
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BUDDY_COL_2,newHair);
+        contentValues.put(BUDDY_COL_3,newHead);
+        contentValues.put(BUDDY_COL_4,newBody);
+        long result = db.update(BUDDY_TABLE,contentValues,"ID=1", null);
         if(result == -1){
             return false;
         }

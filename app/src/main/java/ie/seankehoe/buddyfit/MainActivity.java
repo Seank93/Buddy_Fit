@@ -41,6 +41,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import static android.R.attr.level;
 
@@ -55,13 +56,17 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView totalSteps;
     private TextView totalFloors;
-    private TextView totalCalories,playerLevel,currentStageText;
-    private Button deal1,deal10,deal50;
+    private TextView totalCalories, playerLevel, currentStageText;
+    private Button deal1, deal10, deal50;
     private DailyStats mCurrentStats;
     private ProgressBar progressHP;
+    public ImageView hair;
+    public ImageView body;
+    public ImageView head;
     protected int delay = 300;
 
     ImageView imageViewAlly;
+    ImageView background;
     public static final String TAG = MainActivity.class.getSimpleName();
 
     //enemy variables
@@ -77,8 +82,10 @@ public class MainActivity extends AppCompatActivity {
     //damage Variables
     public int damageTotal = 0;
 
-
-
+    //looks variables
+    ArrayList<Integer> hairList = new ArrayList<>();
+    ArrayList<Integer> bodyList = new ArrayList<>();
+    ArrayList<Integer> headList = new ArrayList<>();
 
 
     @Override
@@ -94,6 +101,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
         }
+        CharacterStyles style = new CharacterStyles();
+        hairList = style.populateHair();
+        bodyList = style.populateBody();
+        headList = style.populateHead();
+
+        setLook();
 
 
         Button btnStats = (Button) findViewById(R.id.btnStats);
@@ -101,44 +114,42 @@ public class MainActivity extends AppCompatActivity {
         Button deal10 = (Button) findViewById(R.id.deal10);
         Button deal50 = (Button) findViewById(R.id.deal50);
 
-        imageViewAlly = (ImageView) findViewById(R.id.imageViewAlly);
-
         hpNumber = (TextView) findViewById(R.id.hpNumber);
         hpNumber.setText(getEnemyCurrentHp() + " / ");
 
         hpMax = (TextView) findViewById(R.id.hpMax);
         hpMax.setText(getEnemyCurrentMax());
 
-        imageViewAlly.setImageResource(R.drawable.char_1);
-        progressHP = (ProgressBar) findViewById(R.id.progressHP);
+        //imageViewAlly.setImageResource(R.drawable.char_1);
         currentStageText = (TextView) findViewById(R.id.current_stage);
 
         currentStageStr = getStage();
         currentStageText.setText(currentStageStr);
-        genderCheck();
-
+        //genderCheck();
 
 
         //Music
         final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.eightbitadventure);
     }
 
-        //music
+    //music
 
-        /** Button play = (Button) findViewById(R.id.buttonsoundon);
-         Button stop = (Button) findViewById(R.id.buttonsoundoff);
-
-         play.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-        mediaPlayer.start();
-        }
-        });
-         stop.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-        mediaPlayer.pause();
-        }
-        });
-         **/
+    /**
+     * Button play = (Button) findViewById(R.id.buttonsoundon);
+     * Button stop = (Button) findViewById(R.id.buttonsoundoff);
+     * <p>
+     * play.setOnClickListener(new View.OnClickListener() {
+     *
+     * @Override public void onClick(View v) {
+     * mediaPlayer.start();
+     * }
+     * });
+     * stop.setOnClickListener(new View.OnClickListener() {
+     * @Override public void onClick(View v) {
+     * mediaPlayer.pause();
+     * }
+     * });
+     **/
 
     public static void unleashPower() {
         //requests
@@ -168,9 +179,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
     private void getStats(Request request) {
 
         OkHttpClient client = new OkHttpClient();
@@ -186,9 +194,9 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     String jsonData = response.body().string();
                     Log.v(TAG, jsonData);
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         mCurrentStats = getCurrentStats(jsonData);
-                        Log.v(TAG,response.body().string());
+                        Log.v(TAG, response.body().string());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -198,10 +206,9 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 } catch (IOException e) {
-                   Log.e(TAG, "Exception", e);
-                }
-                catch (JSONException e){
-                    Log.e(TAG, "Exception",e);
+                    Log.e(TAG, "Exception", e);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Exception", e);
                 }
             }
 
@@ -209,9 +216,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateStats() {
-        totalSteps.setText(mCurrentStats.getSteps()+"");
-        totalFloors.setText(mCurrentStats.getFloors()+"");
-        totalCalories.setText(mCurrentStats.getCalories()+"");
+        totalSteps.setText(mCurrentStats.getSteps() + "");
+        totalFloors.setText(mCurrentStats.getFloors() + "");
+        totalCalories.setText(mCurrentStats.getCalories() + "");
 
     }
 
@@ -231,65 +238,48 @@ public class MainActivity extends AppCompatActivity {
         i.setData(Uri.parse(url));
         startActivity(i);
     }
-    public void goToProfile(View view){
+
+    public void goToProfile(View view) {
         Intent startNewActivity = new Intent(this, StatisticsActivity.class);
         startActivity(startNewActivity);
     }
-    public void showMessage(String title, String Message){
+
+    public void showMessage(String title, String Message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
         builder.setTitle(title);
         builder.setMessage(Message);
         builder.show();
     }
-    public void genderCheck(){
-        String gender = "Female";
-        Cursor result = myDb.getGender();
 
-
-        if(result.moveToFirst()){
-            do{
-                gender = result.getString(result.getColumnIndex("gender"));
-            }while (result.moveToNext());
-        }
-        result.close();
-        if( gender == "Female") {
-            imageViewAlly.setImageResource(R.drawable.char_1);
-        }
-        else
-        {
-            imageViewAlly.setImageResource(R.drawable.char_3);
-        }
-    }
-
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         Cursor result = myDb.getTableData();
-        if(result.getCount() ==0) {
+        if (result.getCount() == 0) {
             showMessage("No Profile Found", "Lets Set you up with one!");
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
         }
-        genderCheck();
+        //genderCheck();
     }
+
     protected void onStop() {
         super.onStop();
         Log.i(TAG, "On Stop .....");
     }
 
 
-
-
     //Methods Involving the Updating and retrieval of the current stage
-    public void updateStage(){
+    public void updateStage() {
         int currentstage = 1234;
         String stageStr = getStage();
 
         currentstage = Integer.parseInt(stageStr);
-        currentstage ++;
+        currentstage++;
         currentStageText.setText(String.valueOf(currentstage));
         myDb.setStage(currentstage);
         updateCurrentMax();
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
@@ -298,17 +288,19 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i3);
             }
         }, delay);
+
     }
-    public String getStage(){
+
+    public String getStage() {
         String StageString = "100";
         Cursor stagecursor = myDb.getStage();
-        if(stagecursor.moveToFirst()){
-            do{
+        if (stagecursor.moveToFirst()) {
+            do {
                 StageString = stagecursor.getString(stagecursor.getColumnIndex("currentstage"));
-            }while (stagecursor.moveToNext());
+            } while (stagecursor.moveToNext());
         }
         stagecursor.close();
-    return StageString;
+        return StageString;
     }
 
     // ***************************************************************************************
@@ -316,72 +308,124 @@ public class MainActivity extends AppCompatActivity {
     //Methods Involving the Updating and retrieval of enemy hp and details
 
 
-    public String getEnemyHpBase(){
+    public String getEnemyHpBase() {
         String hpString = "50";
         Cursor hpcursor = myDb.getEnemy(currentEnemy);
-        if(hpcursor.moveToFirst()){
-            do{
+        if (hpcursor.moveToFirst()) {
+            do {
                 hpString = hpcursor.getString(hpcursor.getColumnIndex("baseHp"));
-            }while (hpcursor.moveToNext());
+            } while (hpcursor.moveToNext());
         }
         hpcursor.close();
         return hpString;
     }
-    public String getEnemyCurrentMax(){
+
+    public String getEnemyCurrentMax() {
         String hpString = "50";
         Cursor hpcursor = myDb.getEnemy(currentEnemy);
-        if(hpcursor.moveToFirst()){
-            do{
+        if (hpcursor.moveToFirst()) {
+            do {
                 hpString = hpcursor.getString(hpcursor.getColumnIndex("currentMax"));
-            }while (hpcursor.moveToNext());
+            } while (hpcursor.moveToNext());
         }
         hpcursor.close();
         return hpString;
     }
-    public String getEnemyCurrentHp(){
+
+    public String getEnemyCurrentHp() {
         String hpString = "50";
         Cursor hpcursor = myDb.getEnemy(currentEnemy);
-        if(hpcursor.moveToFirst()){
-            do{
+        if (hpcursor.moveToFirst()) {
+            do {
                 hpString = hpcursor.getString(hpcursor.getColumnIndex("currentHp"));
-            }while (hpcursor.moveToNext());
+            } while (hpcursor.moveToNext());
         }
         hpcursor.close();
         return hpString;
     }
-    public void updateCurrentMax(){
+
+    public void updateCurrentMax() {
         String base = getEnemyHpBase();
         int newmax = Integer.parseInt(base);
 
-        newmax = Integer.parseInt(getStage())*newmax;
+        newmax = Integer.parseInt(getStage()) * newmax;
         hpMax.setText(String.valueOf(newmax));
         hpNumber.setText(String.valueOf(newmax));
         myDb.setNewMax(newmax, currentEnemy);
         myDb.setCurrentHp(newmax, currentEnemy);
 
     }
-    public void updateEnemyHp(int calcdamage){
+
+    public void updateEnemyHp(int calcdamage) {
         String enemyhp = getEnemyCurrentHp();
         int currentEnemyHp = Integer.parseInt(enemyhp);
         int currentEnemyMax = Integer.parseInt(getEnemyCurrentMax());
 
         currentEnemyHp = currentEnemyHp - calcdamage;
 
-        if((currentEnemyHp == currentEnemyMax) || (currentEnemyHp <= 0))
-        {
+        if ((currentEnemyHp == currentEnemyMax) || (currentEnemyHp <= 0)) {
 
-            hpNumber.setText(String.valueOf(currentEnemyHp +" / "));
-            myDb.setCurrentHp(currentEnemyHp,currentEnemy);
+            hpNumber.setText(String.valueOf(currentEnemyHp + " / "));
+            myDb.setCurrentHp(currentEnemyHp, currentEnemy);
             updateStage();
-        }
-        else {
-            hpNumber.setText(String.valueOf(currentEnemyHp +" / "));
-           myDb.setCurrentHp(currentEnemyHp, currentEnemy);
+        } else {
+            hpNumber.setText(String.valueOf(currentEnemyHp + " / "));
+            myDb.setCurrentHp(currentEnemyHp, currentEnemy);
         }
     }
 
     // ****************************************************************************************
+    //Methods retrieving the look of your character
 
+    public void setLook(){
+        hair = (ImageView) findViewById(R.id.buddyhair);
+        body = (ImageView) findViewById(R.id.buddybody);
+        head = (ImageView) findViewById(R.id.buddyhead);
+        String hairvalue = getHair();
+        String bodyvalue = getBody();
+        String headvalue = getHead();
+        int hairvar = Integer.parseInt(hairvalue);
+        int bodyvar = Integer.parseInt(bodyvalue);
+        int headvar = Integer.parseInt(headvalue);
+        hair.setImageResource(hairList.get(hairvar));
+        body.setImageResource(bodyList.get(bodyvar));
+        head.setImageResource(headList.get(headvar));
+    }
+    public String getHair() {
+        String hair = "10";
+        Cursor bodycursor = myDb.getBody();
+        if (bodycursor.moveToFirst()) {
+            do {
+                hair = bodycursor.getString(bodycursor.getColumnIndex("idHead"));
+            } while (bodycursor.moveToNext());
+        }
+        bodycursor.close();
+        return hair;
+    }
+
+    public String getHead() {
+        String head = "10";
+        Cursor bodycursor = myDb.getBody();
+        if (bodycursor.moveToFirst()) {
+            do {
+                head = bodycursor.getString(bodycursor.getColumnIndex("idBody"));
+            } while (bodycursor.moveToNext());
+        }
+        bodycursor.close();
+        return head;
+    }
+
+    public String getBody() {
+        String body = "10";
+        Cursor bodycursor = myDb.getBody();
+        if (bodycursor.moveToFirst()) {
+            do {
+                body = bodycursor.getString(bodycursor.getColumnIndex("idLegs"));
+            } while (bodycursor.moveToNext());
+        }
+        bodycursor.close();
+        return body;
+    }
     //*****************************************************************************************
     //Damage dealing test buttons
     public void deal1(View view){
@@ -401,6 +445,7 @@ public class MainActivity extends AppCompatActivity {
         Intent startNewActivity = new Intent(this,StageClear.class);
         startActivity(startNewActivity);
     }
+
 
 };
 

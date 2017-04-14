@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Buddy Fit</string>
     <string name="button_profile">Profile</string>
+    <string name="title_activity_edit_buddy">EditBuddy</string>
 </resources>
