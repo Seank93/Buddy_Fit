@@ -1,6 +1,7 @@
 package ie.seankehoe.buddyfit;
 //Sean Kehoe 20/04/2017
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     public ImageView hair;
     public ImageView body;
     public ImageView head;
-    public ImageView enemyImage;
+    public ImageView enemyImage,bgImage;
     protected int delay = 300;
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -71,14 +72,14 @@ public class MainActivity extends AppCompatActivity {
     public String currentStageStr;
 
     //damage Variables
-    public int damageTotal = 0;
+    int totalDamage =0;
 
     //ARRAYLISTS TO HOLD THE CURRENTSET OF VANITY ITEMS
     ArrayList<Integer> hairList = new ArrayList<>();
     ArrayList<Integer> bodyList = new ArrayList<>();
     ArrayList<Integer> headList = new ArrayList<>();
     ArrayList<Integer> enemyList = new ArrayList<>();
-
+    ArrayList<Integer> environList = new ArrayList<>();
 
     @Override
     //onCreate is ran on opening the activity. Sets up the screen
@@ -96,14 +97,18 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
         }
-        //Populate character styles
+        //Populate character/enemy/background styles
+        bgImage = (ImageView) findViewById(R.id.bgImg);
         CharacterStyles style = new CharacterStyles();
         hairList = style.populateHair();
         bodyList = style.populateBody();
         headList = style.populateHead();
         enemyList = style.populateEnemies();
-        //Set Player character to look currently determined by database.
+        environList = style.populateEnvirons();
+
+        //Set Player character/background to look currently determined by database.
         setLook();
+        setBackground();
         int curEnemy = setEnemyModel();
 
         //Test + debug buttons (Not Used in Final Version)
@@ -154,9 +159,9 @@ public class MainActivity extends AppCompatActivity {
     public void unleashPower(View view) {
         //requests
 
-        String fitUrlStep = "https://api.fitbit.com/1/user/-/activities/steps/date/today/1d.json";
-        String fitUrlDistance = "https://api.fitbit.com/1/user/-/activities/distance/today/1d.json";
-        String fitUrlFloors = "https://api.fitbit.com/1/user/-/activities/floors/today/1d.json";
+        String fitUrlStep = "https://api.fitbit.com/1/user/-/activities/date/today.json";
+       // String fitUrlDistance = "https://api.fitbit.com/1/user/-/activities/distance/today/1d.json";
+        //String fitUrlFloors = "https://api.fitbit.com/1/user/-/activities/floors/today/1d.json";
         String fitUrlHeart = "https://api.fitbit.com/1/user/-/activities/heart/date/today/1d.json";
 
         final Request requestStats = new Request.Builder()
@@ -171,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
          .build();
 
         getStats(requestStats);
-        getStats(requestHeart);
+       // getStats(requestHeart);
 
         Toast.makeText(MainActivity.this, "Retrieving Your Stats!", Toast.LENGTH_SHORT).show();
     }
@@ -218,11 +223,25 @@ public class MainActivity extends AppCompatActivity {
         int steps = mCurrentStats.getSteps();
         int floors = mCurrentStats.getFloors();
         int distance = mCurrentStats.getDistance();
-        int calories = mCurrentStats.getDistance();
-        Toast.makeText(MainActivity.this, steps+" steps", Toast.LENGTH_LONG).show();
-        Toast.makeText(MainActivity.this, floors+" floors", Toast.LENGTH_LONG).show();
-        Toast.makeText(MainActivity.this, distance+" distance", Toast.LENGTH_LONG).show();
-        Toast.makeText(MainActivity.this, distance+" calories", Toast.LENGTH_LONG).show();
+        int calories = mCurrentStats.getCalories();
+
+
+        calculateStats(steps,floors,distance,calories);
+
+    }
+
+    private void calculateStats(int steps,int floors,int distance,int calories){
+
+        String StepStrength = getStepSTR();
+        int stepStrenghtInt = Integer.parseInt(StepStrength);
+
+        int totalDamageRound1 = steps * stepStrenghtInt;
+        int totalDamageRound2 = totalDamageRound1 + (floors*10);
+        double totalDamageRound3 = totalDamageRound2 + (calories/2);
+        totalDamage = (int) totalDamageRound3;
+        showOption("Here is the Damage","Steps: "+steps + " (Step Strength: " + stepStrenghtInt + ")" +'\n' + "Calories: " + calories +'\n'+"Floors Climbed: " + floors +'\n' + "Distance: " +distance
+        +'\n'+"------------------" + '\n' + "Total Damage: " + totalDamage);
+
 
     }
 
@@ -258,6 +277,25 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
+    public void showOption(String title, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(message)
+                .setPositiveButton("ATTACK!", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Handle Ok
+                        updateEnemyHp(totalDamage);
+                    }
+                })
+                .setNegativeButton("Wait! Not Yet!", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Handle Cancel
+                    }
+                })
+                .create();
+        builder.show();
+    }
+
     protected void onResume() {
         super.onResume();
         Cursor result = myDb.getTableData();
@@ -278,6 +316,7 @@ public class MainActivity extends AppCompatActivity {
     //Methods Involving the Updating and retrieval of the current stage
     public void updateStage() {
         enemyImage = (ImageView) findViewById(R.id.currentenemy);
+
         int currentstage = 1234;
         String stageStr = getStage();
 
@@ -292,6 +331,8 @@ public class MainActivity extends AppCompatActivity {
         enemyImage.setImageResource(enemyList.get(gen));
         myDb.setCurrentEnemy(currentEnemyInt);
 
+        //change the stage background
+        setBackground();
 
         currentstage++;
         currentStageText.setText(String.valueOf(currentstage));
@@ -433,6 +474,15 @@ public class MainActivity extends AppCompatActivity {
         body.setImageResource(bodyList.get(bodyvar));
         head.setImageResource(headList.get(headvar));
     }
+    public void setBackground(){
+        String stageCount = getStage();
+        int stagecount = Integer.parseInt(stageCount);
+
+
+        int loadstage = stagecount % 3;
+
+        bgImage.setImageResource(environList.get(loadstage));
+    }
     public String getHair() {
         String hair = "10";
         Cursor bodycursor = myDb.getBody();
@@ -467,6 +517,17 @@ public class MainActivity extends AppCompatActivity {
         }
         bodycursor.close();
         return body;
+    }
+    public String getStepSTR() {
+        String str = "10";
+        Cursor strcursor = myDb.getBody();
+        if (strcursor.moveToFirst()) {
+            do {
+                str = strcursor.getString(strcursor.getColumnIndex("stepSTR"));
+            } while (strcursor.moveToNext());
+        }
+        strcursor.close();
+        return str;
     }
     public int setEnemyModel(){
         String enemy = getCurrentEnemy();

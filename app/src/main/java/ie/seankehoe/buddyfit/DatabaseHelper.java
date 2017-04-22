@@ -48,7 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public DatabaseHelper(Context context) {
-        super(context,DATABASE_NAME, null, 11);
+        super(context,DATABASE_NAME, null, 12);
     }
 
 
@@ -59,13 +59,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + STAGE_TABLE +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, currentstage INTEGER DEFAULT 1, currentenemy INTEGER DEFAULT 1)");
         db.execSQL("create table " + BUDDY_TABLE +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, idHead INTEGER DEFAULT 1, idBody INTEGER DEFAULT 1, idLegs INTEGER DEFAULT 1, level INTEGER DEFAULT 1, stepSTR INTEGER DEFAULT 1)");
 
-        db.execSQL("insert into " + ENEMY_TABLE + " values(1,'fatcatpink',120,120,120,'rain')");
-        db.execSQL("insert into " + ENEMY_TABLE + " values(2,'fatbat',140,140,140,'sun')");
-        db.execSQL("insert into " + ENEMY_TABLE + " values(3,'fatlizardred',160,160,160,'cloudy')");
-        db.execSQL("insert into " + ENEMY_TABLE + " values(4,'fatcatgreen',180,180,180,'rain')");
-        db.execSQL("insert into " + ENEMY_TABLE + " values(5,'fatcatblue',195,195,195,'rain')");
-        db.execSQL("insert into " + ENEMY_TABLE + " values(6,'fatlizardblue',203,203,203,'rain')");
-        db.execSQL("insert into " + ENEMY_TABLE + " values(7,'fatlizardgreen',210,210,210,'sun')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(1,'fatcatpink',310,310,310,'rain')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(2,'fatbat',315,315,315,'sun')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(3,'fatlizardred',320,320,320,'cloudy')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(4,'fatcatgreen',320,320,320,'rain')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(5,'fatcatblue',330,330,330,'rain')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(6,'fatlizardblue',340,340,340,'rain')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(7,'fatlizardgreen',345,345,345,'sun')");
 
         db.execSQL("insert into " + STAGE_TABLE + " values(1,1,1)");
         db.execSQL("insert into " + BUDDY_TABLE + " values(1,1,1,1,1,1)");
@@ -121,9 +121,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor result = db.rawQuery("select gender from "+USER_TABLE,null);
         return result;
     }
-    public Cursor getLevel(){
+    public Cursor getStepSTR(){
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor result = db.rawQuery("select level from "+USER_TABLE,null);
+        Cursor result = db.rawQuery("select stepSTR from "+BUDDY_TABLE,null);
         return result;
     }
 

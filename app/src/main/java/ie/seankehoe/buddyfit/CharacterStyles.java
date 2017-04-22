@@ -17,6 +17,7 @@ public class CharacterStyles {
     ArrayList<Integer> bodyList = new ArrayList<>();
     ArrayList<Integer> headList = new ArrayList<>();
     ArrayList<Integer> enemyList = new ArrayList<>();
+    ArrayList<Integer> environList = new ArrayList<>();
 
     public ArrayList populateHair(){
 
@@ -56,7 +57,12 @@ public class CharacterStyles {
         return enemyList;
     }
 
+    public ArrayList populateEnvirons() {
+        environList.add(R.drawable.grassbg);
+        environList.add(R.drawable.cavebg);
+        environList.add(R.drawable.beachbg);
+        return environList;
 
-
+    }
 }
 
