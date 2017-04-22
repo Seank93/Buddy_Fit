@@ -33,7 +33,7 @@ DatabaseHelper myDb;
 
         getProfile();
     }
-    public void deleteProfile(View view){
+   /** public void deleteProfile(View view){
         Integer deletedRows = myDb.deleteData(String.valueOf(1));
         if(deletedRows > 0){
             Toast.makeText(ProfileActivity.this, "Profile Removed", Toast.LENGTH_LONG).show();
@@ -43,7 +43,7 @@ DatabaseHelper myDb;
             Toast.makeText(ProfileActivity.this, "Error, Not Removed", Toast.LENGTH_LONG).show();
         }
     }
-
+**/
     public void returnToMain(View view){
         Intent startNewActivity = new Intent(this, MainActivity.class);
         startActivity(startNewActivity);

@@ -17,23 +17,27 @@ public class StageClear extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        myDb = new DatabaseHelper(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stage_clear);
 
         continue_btn = (Button) findViewById(R.id.btn_continue);
         stage_text = (TextView) findViewById(R.id.stage_text);
+        String currentstage = getStage();
+        int stage = Integer.parseInt(currentstage);
+        stage_text.setText(currentstage);
         //String currentStage = getStage();
         //stage_text.setText(currentStage);
     }
 
 
-    public String getStage(){
+    public String getStage() {
         String StageString = "100";
         Cursor stagecursor = myDb.getStage();
-        if(stagecursor.moveToFirst()){
-            do{
+        if (stagecursor.moveToFirst()) {
+            do {
                 StageString = stagecursor.getString(stagecursor.getColumnIndex("currentstage"));
-            }while (stagecursor.moveToNext());
+            } while (stagecursor.moveToNext());
         }
         stagecursor.close();
         return StageString;

@@ -31,7 +31,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/profile_btn"
-        android:layout_alignEnd="@+id/profile_btn" />
+        android:layout_alignEnd="@+id/profile_btn"
+        android:onClick="unleashPower"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -88,7 +89,7 @@
         android:layout_alignParentEnd="true"
         android:id="@+id/deal50"
         android:onClick="deal50"
-        android:visibility="invisible" />
+        android:visibility="visible" />
 
     <Button
         android:text="Deal 1"
@@ -120,9 +121,11 @@
         android:background="#99ffffff"
         android:layout_above="@+id/deal10"
         android:layout_toRightOf="@+id/hpNumber"
-        android:layout_toEndOf="@+id/hpNumber"
         android:textStyle="normal|bold"
-        android:textSize="36sp" />
+        android:textSize="36sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textAlignment="viewStart" />
 
     <TextView
         android:text="hp /"
@@ -134,7 +137,9 @@
         android:textSize="36sp"
         android:layout_above="@+id/deal1"
         android:layout_toLeftOf="@+id/deal10"
-        android:layout_toStartOf="@+id/deal10" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textAlignment="viewEnd" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -181,10 +186,23 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/enemyc_1"
+        app:srcCompat="@drawable/enemy1"
         android:layout_alignTop="@+id/buddybody"
         android:layout_toRightOf="@+id/buddybody"
         android:layout_toEndOf="@+id/buddybody"
         android:id="@+id/currentenemy" />
+
+    <Button
+        android:text="Authorize Fitbit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/hpMax"
+        android:id="@+id/authfitbit"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="fitAuth"
+        android:layout_toLeftOf="@+id/deal1"
+        android:layout_toStartOf="@+id/deal1"
+        android:textSize="8sp" />
 
 </RelativeLayout>

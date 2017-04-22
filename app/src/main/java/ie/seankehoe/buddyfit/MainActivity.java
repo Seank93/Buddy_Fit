@@ -1,5 +1,5 @@
 package ie.seankehoe.buddyfit;
-
+//Sean Kehoe 20/04/2017
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -42,36 +42,27 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static android.R.attr.level;
 
 public class MainActivity extends AppCompatActivity {
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+    //Global Variables
     DatabaseHelper myDb;
-    private GoogleApiClient client;
-
     private TextView totalSteps;
     private TextView totalFloors;
     private TextView totalCalories, playerLevel, currentStageText;
     private Button deal1, deal10, deal50;
     private DailyStats mCurrentStats;
-    private ProgressBar progressHP;
     public ImageView hair;
     public ImageView body;
     public ImageView head;
+    public ImageView enemyImage;
     protected int delay = 300;
-
-    ImageView imageViewAlly;
-    ImageView background;
     public static final String TAG = MainActivity.class.getSimpleName();
 
     //enemy variables
-    public int currentEnemy = 3;
-
     TextView hpNumber;
     TextView hpMax;
 
@@ -82,43 +73,51 @@ public class MainActivity extends AppCompatActivity {
     //damage Variables
     public int damageTotal = 0;
 
-    //looks variables
+    //ARRAYLISTS TO HOLD THE CURRENTSET OF VANITY ITEMS
     ArrayList<Integer> hairList = new ArrayList<>();
     ArrayList<Integer> bodyList = new ArrayList<>();
     ArrayList<Integer> headList = new ArrayList<>();
+    ArrayList<Integer> enemyList = new ArrayList<>();
 
 
     @Override
+    //onCreate is ran on opening the activity. Sets up the screen
+    //and allows functions to be carried out correctly
+
     protected void onCreate(Bundle savedInstanceState) {
         myDb = new DatabaseHelper(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Checks for user acount on Startup
+        //Checks for user acount on Startup if none, create a profile
         Cursor result = myDb.getTableData();
         if (result.getCount() == 0) {
             showMessage("No Profile Found", "Lets Set you up with one!");
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
         }
+        //Populate character styles
         CharacterStyles style = new CharacterStyles();
         hairList = style.populateHair();
         bodyList = style.populateBody();
         headList = style.populateHead();
-
+        enemyList = style.populateEnemies();
+        //Set Player character to look currently determined by database.
         setLook();
+        int curEnemy = setEnemyModel();
 
-
-        Button btnStats = (Button) findViewById(R.id.btnStats);
+        //Test + debug buttons (Not Used in Final Version)
         Button deal1 = (Button) findViewById(R.id.deal1);
         Button deal10 = (Button) findViewById(R.id.deal10);
         Button deal50 = (Button) findViewById(R.id.deal50);
 
+        //Declaring current enemy HP
         hpNumber = (TextView) findViewById(R.id.hpNumber);
-        hpNumber.setText(getEnemyCurrentHp() + " / ");
+        hpNumber.setText(getEnemyCurrentHp(curEnemy) + " /");
 
+        //Declaring current max hp
         hpMax = (TextView) findViewById(R.id.hpMax);
-        hpMax.setText(getEnemyCurrentMax());
+        hpMax.setText(getEnemyCurrentMax(curEnemy));
 
         //imageViewAlly.setImageResource(R.drawable.char_1);
         currentStageText = (TextView) findViewById(R.id.current_stage);
@@ -151,35 +150,34 @@ public class MainActivity extends AppCompatActivity {
      * });
      **/
 
-    public static void unleashPower() {
+    //How the user progresses in the game.
+    public void unleashPower(View view) {
         //requests
-        String fitUrl = "https://api.fitbit.com/1/user/-/activities/date/today.json";
+
+        String fitUrlStep = "https://api.fitbit.com/1/user/-/activities/steps/date/today/1d.json";
+        String fitUrlDistance = "https://api.fitbit.com/1/user/-/activities/distance/today/1d.json";
+        String fitUrlFloors = "https://api.fitbit.com/1/user/-/activities/floors/today/1d.json";
         String fitUrlHeart = "https://api.fitbit.com/1/user/-/activities/heart/date/today/1d.json";
 
-        /**final Request requestStats = new Request.Builder()
-         .url(fitUrl)
-         .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0REY0Tk0iLCJhdWQiOiIyMjdXTVkiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyc29jIHJzZXQgcmFjdCBybG9jIHJ3ZWkgcmhyIHJudXQgcnBybyByc2xlIiwiZXhwIjoxNDg1NTIyNTk2LCJpYXQiOjE0ODQ5MTc3OTZ9.7_j3Ao7hk1NsGI-1cpC0xG-kt4CyvT_4Nff_ZfaMicg")
+        final Request requestStats = new Request.Builder()
+         .url(fitUrlStep)
+         .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0REY0Tk0iLCJhdWQiOiIyMjdXTVkiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyYWN0IHJociIsImV4cCI6MTQ5MzI0MTAyMiwiaWF0IjoxNDkyODAzMzkyfQ.K48LnBZfJB2AnQ3R6lz5PWK4VCG6t3igjnBs3n0tTJk")
          .build();
+
 
          final Request requestHeart = new Request.Builder()
          .url(fitUrlHeart)
-         .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0REY0Tk0iLCJhdWQiOiIyMjdXTVkiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyc29jIHJzZXQgcmFjdCBybG9jIHJ3ZWkgcmhyIHJudXQgcnBybyByc2xlIiwiZXhwIjoxNDg1NTIyNTk2LCJpYXQiOjE0ODQ5MTc3OTZ9.7_j3Ao7hk1NsGI-1cpC0xG-kt4CyvT_4Nff_ZfaMicg")
+         .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0REY0Tk0iLCJhdWQiOiIyMjdXTVkiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyYWN0IHJociIsImV4cCI6MTQ5MzI0MTAyMiwiaWF0IjoxNDkyODAzMzkyfQ.K48LnBZfJB2AnQ3R6lz5PWK4VCG6t3igjnBs3n0tTJk")
          .build();
 
-         getStats(requestStats);
-         getStats(requestHeart);
-         btnStats.setOnClickListener(new View.OnClickListener(){
-
-        @Override public void onClick(View v) {
         getStats(requestStats);
         getStats(requestHeart);
-        }
-        }); **/
-        //End of Requests
+
+        Toast.makeText(MainActivity.this, "Retrieving Your Stats!", Toast.LENGTH_SHORT).show();
     }
 
-
-    private void getStats(Request request) {
+    //Retrieval of stats
+    public void getStats(Request request) {
 
         OkHttpClient client = new OkHttpClient();
         Call call = client.newCall(request);
@@ -215,10 +213,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     private void updateStats() {
-        totalSteps.setText(mCurrentStats.getSteps() + "");
-        totalFloors.setText(mCurrentStats.getFloors() + "");
-        totalCalories.setText(mCurrentStats.getCalories() + "");
+        int steps = mCurrentStats.getSteps();
+        int floors = mCurrentStats.getFloors();
+        int distance = mCurrentStats.getDistance();
+        int calories = mCurrentStats.getDistance();
+        Toast.makeText(MainActivity.this, steps+" steps", Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this, floors+" floors", Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this, distance+" distance", Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this, distance+" calories", Toast.LENGTH_LONG).show();
 
     }
 
@@ -232,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
         return dailyStats;
     }
 
+    //Authorise your fitbit account
     public void fitAuth(View view) {
         String url = "https://www.fitbit.com/oauth2/authorize?response_type=token&client_id=227WMY&redirect_uri=http%3A%2F%2Fwww.seankehoe.ie%2Fbfit&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight&expires_in=604800";
         Intent i = new Intent(Intent.ACTION_VIEW);
@@ -239,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    //Misc Methods - Changing Activities
     public void goToProfile(View view) {
         Intent startNewActivity = new Intent(this, StatisticsActivity.class);
         startActivity(startNewActivity);
@@ -271,13 +277,27 @@ public class MainActivity extends AppCompatActivity {
 
     //Methods Involving the Updating and retrieval of the current stage
     public void updateStage() {
+        enemyImage = (ImageView) findViewById(R.id.currentenemy);
         int currentstage = 1234;
         String stageStr = getStage();
 
         currentstage = Integer.parseInt(stageStr);
+
+        //Randomly loading a new enemy to display on the next stage.
+        Random r = new Random();
+        int gen = r.nextInt(7 - 1) + 1;
+        String currentenemy = getCurrentEnemy();
+        int currentEnemyInt = Integer.parseInt(currentenemy);
+        currentEnemyInt = gen;
+        enemyImage.setImageResource(enemyList.get(gen));
+        myDb.setCurrentEnemy(currentEnemyInt);
+
+
         currentstage++;
         currentStageText.setText(String.valueOf(currentstage));
         myDb.setStage(currentstage);
+
+
         updateCurrentMax();
 
         Handler handler = new Handler();
@@ -307,10 +327,23 @@ public class MainActivity extends AppCompatActivity {
 
     //Methods Involving the Updating and retrieval of enemy hp and details
 
+    public String getCurrentEnemy() {
+        String id = "4";
+        Cursor idcursor = myDb.getStage();
+        if (idcursor.moveToFirst()) {
+            do {
+                id = idcursor.getString(idcursor.getColumnIndex("currentenemy"));
+            } while (idcursor.moveToNext());
+        }
+        idcursor.close();
+        return id;
+    }
 
     public String getEnemyHpBase() {
-        String hpString = "50";
-        Cursor hpcursor = myDb.getEnemy(currentEnemy);
+        String currentenemy = getCurrentEnemy();
+        int currentEnemyInt = Integer.parseInt(currentenemy);
+        String hpString = "10";
+        Cursor hpcursor = myDb.getEnemy(currentEnemyInt);
         if (hpcursor.moveToFirst()) {
             do {
                 hpString = hpcursor.getString(hpcursor.getColumnIndex("baseHp"));
@@ -320,9 +353,9 @@ public class MainActivity extends AppCompatActivity {
         return hpString;
     }
 
-    public String getEnemyCurrentMax() {
+    public String getEnemyCurrentMax(int current) {
         String hpString = "50";
-        Cursor hpcursor = myDb.getEnemy(currentEnemy);
+        Cursor hpcursor = myDb.getEnemy(current);
         if (hpcursor.moveToFirst()) {
             do {
                 hpString = hpcursor.getString(hpcursor.getColumnIndex("currentMax"));
@@ -332,9 +365,10 @@ public class MainActivity extends AppCompatActivity {
         return hpString;
     }
 
-    public String getEnemyCurrentHp() {
+    public String getEnemyCurrentHp(int current) {
+
         String hpString = "50";
-        Cursor hpcursor = myDb.getEnemy(currentEnemy);
+        Cursor hpcursor = myDb.getEnemy(current);
         if (hpcursor.moveToFirst()) {
             do {
                 hpString = hpcursor.getString(hpcursor.getColumnIndex("currentHp"));
@@ -345,32 +379,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateCurrentMax() {
+        String currentenemy = getCurrentEnemy();
+        int currentEnemyInt = Integer.parseInt(currentenemy);
         String base = getEnemyHpBase();
+
         int newmax = Integer.parseInt(base);
 
         newmax = Integer.parseInt(getStage()) * newmax;
+
         hpMax.setText(String.valueOf(newmax));
         hpNumber.setText(String.valueOf(newmax));
-        myDb.setNewMax(newmax, currentEnemy);
-        myDb.setCurrentHp(newmax, currentEnemy);
+        myDb.setNewMax(newmax, currentEnemyInt);
+        myDb.setCurrentHp(newmax, currentEnemyInt);
 
     }
 
     public void updateEnemyHp(int calcdamage) {
-        String enemyhp = getEnemyCurrentHp();
+        String currentenemy = getCurrentEnemy();
+        int currentEnemyInt = Integer.parseInt(currentenemy);
+        String enemyhp = getEnemyCurrentHp(currentEnemyInt);
+
+
         int currentEnemyHp = Integer.parseInt(enemyhp);
-        int currentEnemyMax = Integer.parseInt(getEnemyCurrentMax());
+        int currentEnemyMax = Integer.parseInt(getEnemyCurrentMax(currentEnemyInt));
 
         currentEnemyHp = currentEnemyHp - calcdamage;
 
         if ((currentEnemyHp == currentEnemyMax) || (currentEnemyHp <= 0)) {
 
             hpNumber.setText(String.valueOf(currentEnemyHp + " / "));
-            myDb.setCurrentHp(currentEnemyHp, currentEnemy);
+            myDb.setCurrentHp(currentEnemyHp, currentEnemyInt);
             updateStage();
         } else {
             hpNumber.setText(String.valueOf(currentEnemyHp + " / "));
-            myDb.setCurrentHp(currentEnemyHp, currentEnemy);
+            myDb.setCurrentHp(currentEnemyHp, currentEnemyInt);
         }
     }
 
@@ -426,6 +468,13 @@ public class MainActivity extends AppCompatActivity {
         bodycursor.close();
         return body;
     }
+    public int setEnemyModel(){
+        String enemy = getCurrentEnemy();
+        int enemyint = Integer.parseInt(enemy);
+        enemyImage = (ImageView) findViewById(R.id.currentenemy);
+        enemyImage.setImageResource(enemyList.get(enemyint));
+        return enemyint;
+    }
     //*****************************************************************************************
     //Damage dealing test buttons
     public void deal1(View view){
@@ -437,7 +486,7 @@ public class MainActivity extends AppCompatActivity {
         updateEnemyHp(deal10);
     }
     public void deal50(View view){
-        int deal50 = 50;
+        int deal50 = 150;
         updateEnemyHp(deal50);
     }
 

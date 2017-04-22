@@ -37,6 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //--------------------------------------------------
     public static final String STAGE_COL_1 = "ID";
     public static final String STAGE_COL_2 = "currentstage";
+    public static final String STAGE_COL_3 = "currentenemy";
     //--------------------------------------------------
     public static final String BUDDY_COL_1 = "ID";
     public static final String BUDDY_COL_2 = "idHead";
@@ -46,31 +47,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String BUDDY_COL_6 = "stepStr";
 
 
-
-
-
-
-
-
     public DatabaseHelper(Context context) {
-        super(context,DATABASE_NAME, null, 9);
+        super(context,DATABASE_NAME, null, 11);
     }
-
 
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + USER_TABLE +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, age INTEGER, total_steps INTEGER, total_calories DOUBLE, gender TEXT DEFAULT 'Female')");
         db.execSQL("create table " + ENEMY_TABLE +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, baseHp INTEGER, currentMax INTEGER, currentHp INTEGER, weakness TEXT)");
-        db.execSQL("create table " + STAGE_TABLE +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, currentstage INTEGER DEFAULT 1)");
+        db.execSQL("create table " + STAGE_TABLE +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, currentstage INTEGER DEFAULT 1, currentenemy INTEGER DEFAULT 1)");
         db.execSQL("create table " + BUDDY_TABLE +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, idHead INTEGER DEFAULT 1, idBody INTEGER DEFAULT 1, idLegs INTEGER DEFAULT 1, level INTEGER DEFAULT 1, stepSTR INTEGER DEFAULT 1)");
 
-        db.execSQL("insert into " + ENEMY_TABLE + " values(1,'fatcat',100,100,100,'rain')");
-        db.execSQL("insert into " + ENEMY_TABLE + " values(2,'fatlizard',140,140,140,'sun')");
-        db.execSQL("insert into " + ENEMY_TABLE + " values(3,'fatdog',160,160,160,'cloudy')");
-        db.execSQL("insert into " + ENEMY_TABLE + " values(4,'fatbat',180,180,180,'sun')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(1,'fatcatpink',120,120,120,'rain')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(2,'fatbat',140,140,140,'sun')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(3,'fatlizardred',160,160,160,'cloudy')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(4,'fatcatgreen',180,180,180,'rain')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(5,'fatcatblue',195,195,195,'rain')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(6,'fatlizardblue',203,203,203,'rain')");
+        db.execSQL("insert into " + ENEMY_TABLE + " values(7,'fatlizardgreen',210,210,210,'sun')");
 
-        db.execSQL("insert into " + STAGE_TABLE + " values(1, 1)");
+        db.execSQL("insert into " + STAGE_TABLE + " values(1,1,1)");
         db.execSQL("insert into " + BUDDY_TABLE + " values(1,1,1,1,1,1)");
     }
 
@@ -97,9 +94,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
         }
     }
-    public Integer deleteData(String id){
+    public void deleteData(){
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(USER_TABLE,"ID = ?",new String[]{id});
+        db.execSQL("delete from "+ USER_TABLE);
+        ContentValues contentValuesStage = new ContentValues();
+        contentValuesStage.put(STAGE_COL_2,1);
+        db.update(STAGE_TABLE,contentValuesStage, "ID =1", null);
+
+        ContentValues contentValuesBuddy = new ContentValues();
+        contentValuesBuddy.put(BUDDY_COL_2,1);
+        contentValuesBuddy.put(BUDDY_COL_3,1);
+        contentValuesBuddy.put(BUDDY_COL_4,1);
+        contentValuesBuddy.put(BUDDY_COL_5,1);
+        contentValuesBuddy.put(BUDDY_COL_6,1);
+        db.update(BUDDY_TABLE,contentValuesBuddy, "ID =1", null);
+
     }
 
     public Cursor getTableData(){
@@ -165,6 +174,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(STAGE_COL_2,newcurrent);
+        long result = db.update(STAGE_TABLE,contentValues, "ID =1", null);
+        if(result == -1){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+    public boolean setCurrentEnemy(int current){
+        String newcurrent = Integer.toString(current);
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(STAGE_COL_3,newcurrent);
         long result = db.update(STAGE_TABLE,contentValues, "ID =1", null);
         if(result == -1){
             return false;

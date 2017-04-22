@@ -12,22 +12,14 @@
     android:background="@color/colorPrimary">
 
     <TextView
-        android:text="Congratulations, You've reached Stage"
+        android:text="You've reached Stage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="149dp"
-        android:id="@+id/textView2" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView2"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/stage_text" />
+        android:id="@+id/textView2"
+        android:textSize="18sp" />
 
     <Button
         android:text="Neat!"
@@ -38,4 +30,24 @@
         android:layout_marginBottom="158dp"
         android:id="@+id/btn_continue"
         android:onClick="gameContinue"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/stage_text"
+        android:layout_above="@+id/btn_continue"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="29dp"
+        android:textSize="36sp" />
+
+    <TextView
+        android:text="Congratulations"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="44dp"
+        android:id="@+id/textView6"
+        android:textSize="30sp" />
 </RelativeLayout>
