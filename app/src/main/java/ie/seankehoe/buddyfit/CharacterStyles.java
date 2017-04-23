@@ -11,21 +11,27 @@ import java.util.ArrayList;
  */
 
 public class CharacterStyles {
-    DatabaseHelper myDb;
 
     ArrayList<Integer> hairList = new ArrayList<>();
     ArrayList<Integer> bodyList = new ArrayList<>();
     ArrayList<Integer> headList = new ArrayList<>();
     ArrayList<Integer> enemyList = new ArrayList<>();
     ArrayList<Integer> environList = new ArrayList<>();
+    int currentstage;
 
     public ArrayList populateHair(){
-
         hairList.add(R.drawable.hair1);
         hairList.add(R.drawable.hair2);
         hairList.add(R.drawable.hair3);
         hairList.add(R.drawable.hair4);
         hairList.add(R.drawable.hair5);
+        //Theseoptions are unlocked on reaching a certain Stage in the game.
+        if(currentstage >= 5){
+            hairList.add(R.drawable.hair6);
+        }
+        if(currentstage >= 10){
+            hairList.add(R.drawable.hair7);
+        }
         return hairList;
 
     }
@@ -64,5 +70,10 @@ public class CharacterStyles {
         return environList;
 
     }
+
+    public void setLocalStage(int newstage){
+        currentstage = newstage;
+    }
+
 }
 

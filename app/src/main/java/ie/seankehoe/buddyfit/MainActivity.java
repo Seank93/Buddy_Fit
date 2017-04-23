@@ -158,7 +158,9 @@ public class MainActivity extends AppCompatActivity {
     //How the user progresses in the game.
     public void unleashPower(View view) {
         //requests
-
+        String lat = "52.2593";
+        String longi = "7.1101";
+        String weatherRequest = "https://api.darksky.net/forecast/e5aff2c280012546662f72c85823b0cd/"+lat+","+longi+"";
         String fitUrlStep = "https://api.fitbit.com/1/user/-/activities/date/today.json";
        // String fitUrlDistance = "https://api.fitbit.com/1/user/-/activities/distance/today/1d.json";
         //String fitUrlFloors = "https://api.fitbit.com/1/user/-/activities/floors/today/1d.json";
@@ -175,8 +177,13 @@ public class MainActivity extends AppCompatActivity {
          .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0REY0Tk0iLCJhdWQiOiIyMjdXTVkiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyYWN0IHJociIsImV4cCI6MTQ5MzI0MTAyMiwiaWF0IjoxNDkyODAzMzkyfQ.K48LnBZfJB2AnQ3R6lz5PWK4VCG6t3igjnBs3n0tTJk")
          .build();
 
+        final Request requestWeather = new Request.Builder()
+                .url(weatherRequest)
+                .build();
+
         getStats(requestStats);
        // getStats(requestHeart);
+
 
         Toast.makeText(MainActivity.this, "Retrieving Your Stats!", Toast.LENGTH_SHORT).show();
     }

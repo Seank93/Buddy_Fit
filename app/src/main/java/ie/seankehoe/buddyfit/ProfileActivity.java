@@ -52,7 +52,7 @@ DatabaseHelper myDb;
         Cursor result = myDb.getTableData();
         if(result.getCount() ==0)
         {
-            showMessage("Error","No Profile Found");
+            showMessage("Welcome to Buddy Fit","Before we begin, we need to set you up with a profile");
             return;
         }
         else{
