@@ -53,14 +53,17 @@ public class MainActivity extends AppCompatActivity {
     DatabaseHelper myDb;
     private TextView totalSteps;
     private TextView totalFloors;
-    private TextView totalCalories, playerLevel, currentStageText;
+    private TextView totalCalories, playerLevel, currentStageText,weathertext;
     private Button deal1, deal10, deal50;
     private DailyStats mCurrentStats;
+    private WeatherStats wCurrentStats;
     public ImageView hair;
     public ImageView body;
     public ImageView head;
+    public int unlocks =1;
     public ImageView enemyImage,bgImage;
     protected int delay = 300;
+    public String globalWeather = "Sunny";
     public static final String TAG = MainActivity.class.getSimpleName();
 
     //enemy variables
@@ -97,10 +100,19 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
         }
+        //Deals with loading correct stage
+        currentStageText = (TextView) findViewById(R.id.current_stage);
+        weathertext = (TextView) findViewById(R.id.weathertext);
+
+        currentStageStr = getStage();
+        int currentstageInt = Integer.parseInt(currentStageStr);
+        currentStageText.setText(currentStageStr);
+
+
         //Populate character/enemy/background styles
         bgImage = (ImageView) findViewById(R.id.bgImg);
         CharacterStyles style = new CharacterStyles();
-        hairList = style.populateHair();
+        hairList = style.populateHair(currentstageInt);
         bodyList = style.populateBody();
         headList = style.populateHead();
         enemyList = style.populateEnemies();
@@ -125,11 +137,7 @@ public class MainActivity extends AppCompatActivity {
         hpMax.setText(getEnemyCurrentMax(curEnemy));
 
         //imageViewAlly.setImageResource(R.drawable.char_1);
-        currentStageText = (TextView) findViewById(R.id.current_stage);
 
-        currentStageStr = getStage();
-        currentStageText.setText(currentStageStr);
-        //genderCheck();
 
 
         //Music
@@ -158,38 +166,42 @@ public class MainActivity extends AppCompatActivity {
     //How the user progresses in the game.
     public void unleashPower(View view) {
         //requests
-        String lat = "52.2593";
-        String longi = "7.1101";
-        String weatherRequest = "https://api.darksky.net/forecast/e5aff2c280012546662f72c85823b0cd/"+lat+","+longi+"";
+
         String fitUrlStep = "https://api.fitbit.com/1/user/-/activities/date/today.json";
        // String fitUrlDistance = "https://api.fitbit.com/1/user/-/activities/distance/today/1d.json";
         //String fitUrlFloors = "https://api.fitbit.com/1/user/-/activities/floors/today/1d.json";
-        String fitUrlHeart = "https://api.fitbit.com/1/user/-/activities/heart/date/today/1d.json";
+
 
         final Request requestStats = new Request.Builder()
          .url(fitUrlStep)
-         .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0REY0Tk0iLCJhdWQiOiIyMjdXTVkiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyYWN0IHJociIsImV4cCI6MTQ5MzI0MTAyMiwiaWF0IjoxNDkyODAzMzkyfQ.K48LnBZfJB2AnQ3R6lz5PWK4VCG6t3igjnBs3n0tTJk")
+         .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0REY0Tk0iLCJhdWQiOiIyMjdXTVkiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyc29jIHJzZXQgcmFjdCBybG9jIHJ3ZWkgcmhyIHJudXQgcnBybyByc2xlIiwiZXhwIjoxNTI1MjkwNTc0LCJpYXQiOjE0OTM3NTY4MDZ9.CPSnLTwaKluborwFiJf3vRKMi0lOxidIT7S682WQcSA")
          .build();
-
-
-         final Request requestHeart = new Request.Builder()
-         .url(fitUrlHeart)
-         .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0REY0Tk0iLCJhdWQiOiIyMjdXTVkiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyYWN0IHJociIsImV4cCI6MTQ5MzI0MTAyMiwiaWF0IjoxNDkyODAzMzkyfQ.K48LnBZfJB2AnQ3R6lz5PWK4VCG6t3igjnBs3n0tTJk")
-         .build();
-
-        final Request requestWeather = new Request.Builder()
-                .url(weatherRequest)
-                .build();
 
         getStats(requestStats);
-       // getStats(requestHeart);
-
 
         Toast.makeText(MainActivity.this, "Retrieving Your Stats!", Toast.LENGTH_SHORT).show();
     }
 
     //Retrieval of stats
     public void getStats(Request request) {
+
+        //Request Weather and Heart Data Before finishing this
+        String lat = "52.2462";
+        String longi = "7.1402";
+        String weatherRequest = "https://api.darksky.net/forecast/e5aff2c280012546662f72c85823b0cd/"+lat+","+longi+"";
+        String fitUrlHeart = "https://api.fitbit.com/1/user/-/activities/heart/date/today/1d.json";
+
+        final Request requestWeather = new Request.Builder()
+                .url(weatherRequest)
+                .build();
+
+       /** final Request requestHeart = new Request.Builder()
+                .url(fitUrlHeart)
+                .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0REY0Tk0iLCJhdWQiOiIyMjdXTVkiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyc29jIHJzZXQgcmFjdCBybG9jIHJ3ZWkgcmhyIHJudXQgcnBybyByc2xlIiwiZXhwIjoxNTI1MjkwNTc0LCJpYXQiOjE0OTM3NTY4MDZ9.CPSnLTwaKluborwFiJf3vRKMi0lOxidIT7S682WQcSA")
+                .build();
+**/
+      //  getHeartStats(requestHeart);
+        getWeatherStats(requestWeather);
 
         OkHttpClient client = new OkHttpClient();
         Call call = client.newCall(request);
@@ -225,6 +237,77 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void getWeatherStats(Request request) {
+
+        OkHttpClient client = new OkHttpClient();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                try {
+                    String jsonData = response.body().string();
+                    Log.v(TAG, jsonData);
+                    if (response.isSuccessful()) {
+                        wCurrentStats = getWeatherStats(jsonData);
+                        Log.v(TAG, response.body().string());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateWeather();
+                            }
+                        });
+
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "Exception", e);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Exception", e);
+                }
+            }
+
+        });
+    }
+
+    public void getHeartStats(Request request){
+
+        OkHttpClient client = new OkHttpClient();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                try {
+                    String jsonData = response.body().string();
+                    Log.v(TAG, jsonData);
+                    if (response.isSuccessful()) {
+                        mCurrentStats = getHeartRateStats(jsonData);
+                        Log.v(TAG, response.body().string());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateHeart();
+                            }
+                        });
+
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "Exception", e);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Exception", e);
+                }
+            }
+
+        });
+    }
 
     private void updateStats() {
         int steps = mCurrentStats.getSteps();
@@ -232,26 +315,94 @@ public class MainActivity extends AppCompatActivity {
         int distance = mCurrentStats.getDistance();
         int calories = mCurrentStats.getCalories();
 
-
         calculateStats(steps,floors,distance,calories);
 
+    }
+    private void updateHeart() {
+        int resting = mCurrentStats.getHeartRateRest();
+        int floors = mCurrentStats.getFloors();
+        int distance = mCurrentStats.getDistance();
+        int calories = mCurrentStats.getCalories();
+        Toast.makeText(MainActivity.this, "Total Rest Mins: "+ resting, Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void updateWeather() {
+        String currentWeather = wCurrentStats.getWeather();
+        globalWeather = currentWeather;
+        weathertext.setText(currentWeather);
     }
 
     private void calculateStats(int steps,int floors,int distance,int calories){
 
+        //Calculation of damagae.
+        // Steps are worth 1:1 multiplied by step strength
+        //Stairs are worth 5 damgae points per flight of stairs
+        // Calories are worth 10% of what the daily total would be
+        // (These are working figures and can change easily based on range of data taken)
+        Toast.makeText(MainActivity.this, "GlobalWeather ::"+ globalWeather, Toast.LENGTH_SHORT).show();
+        int bonuspercent = 0;
         String StepStrength = getStepSTR();
         int stepStrenghtInt = Integer.parseInt(StepStrength);
 
         int totalDamageRound1 = steps * stepStrenghtInt;
-        int totalDamageRound2 = totalDamageRound1 + (floors*10);
-        double totalDamageRound3 = totalDamageRound2 + (calories/2);
+        int totalDamageRound2 = totalDamageRound1 + (floors*5);
+        double totalDamageRound3 = totalDamageRound2 + (calories/10);
         totalDamage = (int) totalDamageRound3;
-        showOption("Here is the Damage","Steps: "+steps + " (Step Strength: " + stepStrenghtInt + ")" +'\n' + "Calories: " + calories +'\n'+"Floors Climbed: " + floors +'\n' + "Distance: " +distance
-        +'\n'+"------------------" + '\n' + "Total Damage: " + totalDamage);
+
+        if(globalWeather.equalsIgnoreCase("Drizzle"))
+        {
+            totalDamage = (int) (totalDamage*1.2);
+            bonuspercent = 20;
+        }
+        else if(globalWeather.equalsIgnoreCase("Overcast"))
+        {
+            totalDamage = (int) (totalDamage*1.4);
+            bonuspercent = 40;
+        }
+        else if(globalWeather.equalsIgnoreCase("Rain"))
+        {
+            totalDamage = (int) (totalDamage*1.5);
+            bonuspercent = 50;
+        }
+        else if(globalWeather.equalsIgnoreCase("Light Rain"))
+        {
+            totalDamage = (int) (totalDamage*1.4);
+            bonuspercent = 40;
+        }
+        else if(globalWeather.equalsIgnoreCase("Sun"))
+        {
+            totalDamage = (int) (totalDamage*1.1);
+            bonuspercent = 10;
+        }
+        else if(globalWeather.equalsIgnoreCase("Cloudy"))
+        {
+            totalDamage = (int) (totalDamage*1.15);
+            bonuspercent = 15;
+        }
+        else if(globalWeather.equalsIgnoreCase("Partly Cloudy"))
+        {
+            totalDamage = (int) (totalDamage*1.10);
+            bonuspercent = 10;
+        }
+        else if(globalWeather.equalsIgnoreCase("Mostly Cloudy"))
+        {
+            totalDamage = (int) (totalDamage*1.2);
+            bonuspercent = 20;
+        }
+        else if(globalWeather.equalsIgnoreCase("Clear"))
+        {
+            totalDamage = (int) (totalDamage*1.05);
+            bonuspercent = 5;
+        }
+
+        showOption("Here is the Damage","Steps: "+steps + " (Step Strength: " + stepStrenghtInt + ")" +'\n' + "Calories: " + calories/10 +'\n'+"Flights of Stairs: " + floors*5 +'\n' + "Distance: " +distance + '\n' + "Weather Bonus: " + globalWeather + "(Bonus: " +bonuspercent+"%)"+ '\n' +
+        "------------------" + '\n' + "Total Damage: " + totalDamage);
 
 
     }
 
+    //only retrieves json relating to steps/distance/floors
     private DailyStats getCurrentStats(String jsonData) throws JSONException {
         JSONObject summarystats = new JSONObject(jsonData);
         JSONObject summary = summarystats.getJSONObject("summary");
@@ -261,7 +412,54 @@ public class MainActivity extends AppCompatActivity {
         dailyStats.setFloors(summary.getInt("floors"));
         return dailyStats;
     }
+    //gets data only relating to heart zones.
+    private DailyStats getHeartRateStats(String jsonData) throws JSONException{
 
+        int res1 = 0;
+        int res2 = 0;
+        int res3 = 0;
+        int res4 = 0;
+        DailyStats heartStats = new DailyStats();
+
+        JSONObject heartstats = new JSONObject(jsonData);
+        JSONArray heartsummary = heartstats.getJSONArray("activities-heart");
+
+        for(int j=0;j<heartsummary.length();j++){
+            JSONObject heartData = heartsummary.getJSONObject(j);
+            JSONObject heartValues = heartData.getJSONObject("value");
+            JSONArray heartareas = heartValues.getJSONArray("heartRateZones");
+
+            for(int i = 0; i < 4; i++) {
+                if(i == 0) {
+                    res1 = heartareas.getJSONObject(i).getInt("minutes");
+                }
+                else if(i==1){
+                    res2 = heartareas.getJSONObject(i).getInt("minutes");
+                }
+                else if(i==2){
+                    res3 = heartareas.getJSONObject(i).getInt("minutes");
+                }
+                else if(i==3){
+                    res4 = heartareas.getJSONObject(i).getInt("minutes");
+                }
+            }
+        }
+        //Sets the heart rates and how long you spent in them
+        heartStats.setHeartRateRest(res1);
+        heartStats.setHeartRatefatburn(res2);
+        heartStats.setHeartRatecardio(res3);
+        heartStats.setHeartRatePeak(res4);
+        Toast.makeText(MainActivity.this, "Heart Zone 1 "+ res1, Toast.LENGTH_SHORT).show();
+
+        return heartStats;
+    }
+    private WeatherStats getWeatherStats(String jsonData) throws JSONException {
+        JSONObject weatherstats = new JSONObject(jsonData);
+        JSONObject currentWeather = weatherstats.getJSONObject("currently");
+        WeatherStats weatherstat = new WeatherStats();
+        weatherstat.setWeather(currentWeather.getString("summary"));
+        return weatherstat;
+    }
     //Authorise your fitbit account
     public void fitAuth(View view) {
         String url = "https://www.fitbit.com/oauth2/authorize?response_type=token&client_id=227WMY&redirect_uri=http%3A%2F%2Fwww.seankehoe.ie%2Fbfit&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight&expires_in=604800";
@@ -322,6 +520,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Methods Involving the Updating and retrieval of the current stage
     public void updateStage() {
+        CharacterStyles stageupdate = new CharacterStyles();
         enemyImage = (ImageView) findViewById(R.id.currentenemy);
 
         int currentstage = 1234;
@@ -344,7 +543,7 @@ public class MainActivity extends AppCompatActivity {
         currentstage++;
         currentStageText.setText(String.valueOf(currentstage));
         myDb.setStage(currentstage);
-
+        stageupdate.setLocalStage(currentstage);
 
         updateCurrentMax();
 

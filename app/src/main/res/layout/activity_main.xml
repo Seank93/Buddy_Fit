@@ -38,7 +38,8 @@
         android:textAlignment="textEnd"
         android:layout_toLeftOf="@+id/current_stage"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textColor="#ff222222" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -52,7 +53,7 @@
         android:textStyle="normal|bold"
         android:paddingTop="0dp"
         android:textSize="30sp"
-        android:textColor="@color/common_google_signin_btn_text_light_default"
+        android:textColor="#ff222222"
         android:layout_alignTop="@+id/textView3"
         android:layout_alignBottom="@+id/textView3"
         android:paddingLeft="10dp"
@@ -73,7 +74,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:textAlignment="textStart"
-        android:layout_toEndOf="@+id/buddybody" />
+        android:layout_toEndOf="@+id/buddybody"
+        android:textColor="#ff222222" />
 
     <TextView
         android:text="hp /"
@@ -88,7 +90,8 @@
         android:layout_alignParentStart="true"
         android:textAlignment="viewEnd"
         android:layout_toLeftOf="@+id/hpMax"
-        android:layout_toStartOf="@+id/hpMax" />
+        android:layout_toStartOf="@+id/hpMax"
+        android:textColor="#ff222222" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -236,5 +239,32 @@
         android:layout_toLeftOf="@+id/deal1"
         android:layout_toStartOf="@+id/deal1"
         android:layout_above="@+id/authfitbit" />
+
+    <TextView
+        android:text=" Unknown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/weathertext"
+        android:layout_below="@+id/imageView"
+        android:layout_toRightOf="@+id/textView3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="#88ffffff"
+        android:textColor="#ff222222" />
+
+    <TextView
+        android:text="Weather: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView8"
+        android:layout_alignBaseline="@+id/weathertext"
+        android:layout_alignBottom="@+id/weathertext"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/weathertext"
+        android:layout_toStartOf="@+id/weathertext"
+        android:textAlignment="viewEnd"
+        android:background="#88ffffff"
+        android:textColor="#ff222222" />
 
 </RelativeLayout>

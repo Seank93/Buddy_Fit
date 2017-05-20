@@ -17,9 +17,10 @@ public class CharacterStyles {
     ArrayList<Integer> headList = new ArrayList<>();
     ArrayList<Integer> enemyList = new ArrayList<>();
     ArrayList<Integer> environList = new ArrayList<>();
-    int currentstage;
+    int stage;
 
-    public ArrayList populateHair(){
+    public ArrayList populateHair(int unlocks){
+        int currentstage = unlocks;
         hairList.add(R.drawable.hair1);
         hairList.add(R.drawable.hair2);
         hairList.add(R.drawable.hair3);
@@ -72,7 +73,11 @@ public class CharacterStyles {
     }
 
     public void setLocalStage(int newstage){
-        currentstage = newstage;
+        stage = newstage;
+
+    }
+    public int getstage(){
+        return stage;
     }
 
 }

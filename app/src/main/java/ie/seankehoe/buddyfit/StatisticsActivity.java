@@ -37,7 +37,8 @@ public class StatisticsActivity extends AppCompatActivity{
         setContentView(R.layout.activity_statistics);
         myDb = new DatabaseHelper(this);
         CharacterStyles style = new CharacterStyles();
-        hairList = style.populateHair();
+        int unlocks = Integer.parseInt(getStage());
+        hairList = style.populateHair(unlocks);
         bodyList = style.populateBody();
         headList = style.populateHead();
         setLook();
@@ -108,6 +109,17 @@ public class StatisticsActivity extends AppCompatActivity{
     public void goToEdit(View view) {
         Intent startNewActivity = new Intent(this, EditBuddy.class);
         startActivity(startNewActivity);
+    }
+    public String getStage() {
+        String StageString = "100";
+        Cursor stagecursor = myDb.getStage();
+        if (stagecursor.moveToFirst()) {
+            do {
+                StageString = stagecursor.getString(stagecursor.getColumnIndex("currentstage"));
+            } while (stagecursor.moveToNext());
+        }
+        stagecursor.close();
+        return StageString;
     }
 
 }

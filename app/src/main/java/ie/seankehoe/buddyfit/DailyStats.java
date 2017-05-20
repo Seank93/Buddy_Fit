@@ -32,7 +32,43 @@ public class DailyStats {
     private int steps;
     private int distance;
     private int floors;
-    private int heartRate;
+
+    public int getHeartRatecardio() {
+        return heartRatecardio;
+    }
+
+    public void setHeartRatecardio(int heartRatecardio) {
+        this.heartRatecardio = heartRatecardio;
+    }
+
+    public int getHeartRatefatburn() {
+        return heartRatefatburn;
+    }
+
+    public void setHeartRatefatburn(int heartRatefatburn) {
+        this.heartRatefatburn = heartRatefatburn;
+    }
+
+    public int getHeartRateRest() {
+        return heartRateRest;
+    }
+
+    public void setHeartRateRest(int heartRateRest) {
+        this.heartRateRest = heartRateRest;
+    }
+
+    public int getHeartRatePeak() {
+        return heartRatePeak;
+    }
+
+    public void setHeartRatePeak(int heartRatePeak) {
+        this.heartRatePeak = heartRatePeak;
+    }
+
+    private int heartRateRest;
+    private int heartRatefatburn;
+    private int heartRatecardio;
+    private int heartRatePeak;
     private int calories;
 
     public int getCalories() {
@@ -42,14 +78,5 @@ public class DailyStats {
     public void setCalories(int calories) {
         this.calories = calories;
     }
-
-    public int getHeartRate() {
-        return heartRate;
-    }
-
-    public void setHeartRate(int heartRate) {
-        this.heartRate = heartRate;
-    }
-
 
 }

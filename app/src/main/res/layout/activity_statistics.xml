@@ -54,7 +54,7 @@
         android:layout_toEndOf="@+id/stage_tx" />
 
     <TextView
-        android:text="TextView"
+        android:text="Sean"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView19"
@@ -65,7 +65,6 @@
         android:layout_alignEnd="@+id/buddyhead" />
 
     <TextView
-        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView27"
@@ -76,7 +75,7 @@
         android:layout_marginBottom="61dp" />
 
     <TextView
-        android:text="TextView"
+        android:text="3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView25"
@@ -86,7 +85,7 @@
         android:layout_alignStart="@+id/textView23" />
 
     <TextView
-        android:text="TextView"
+        android:text="14502"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView23"
@@ -96,7 +95,7 @@
         android:layout_alignStart="@+id/textView21" />
 
     <TextView
-        android:text="TextView"
+        android:text="24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView21"
@@ -145,17 +144,6 @@
         android:layout_alignLeft="@+id/steps_tx"
         android:layout_alignStart="@+id/steps_tx" />
 
-    <TextView
-        android:text="Player Level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/level_tx"
-        android:paddingTop="10dp"
-        android:layout_alignBaseline="@+id/textView27"
-        android:layout_alignBottom="@+id/textView27"
-        android:layout_alignLeft="@+id/stage_tx"
-        android:layout_alignStart="@+id/stage_tx" />
-
     <Button
         android:text="Edit Buddy"
         android:layout_width="wrap_content"
@@ -164,6 +152,16 @@
         android:layout_above="@+id/return_btn"
         android:layout_centerHorizontal="true"
         android:onClick="goToEdit"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/level_tx"
+        android:paddingTop="10dp"
+        android:layout_alignBaseline="@+id/textView27"
+        android:layout_alignBottom="@+id/textView27"
+        android:layout_alignLeft="@+id/stage_tx"
+        android:layout_alignStart="@+id/stage_tx" />
 
 
 </RelativeLayout>

@@ -39,12 +39,12 @@ public class StageClear extends AppCompatActivity {
         int stage = Integer.parseInt(currentstage);
         CharacterStyles style = new CharacterStyles();
         style.setLocalStage(stage);
-        hairList = style.populateHair();
+        hairList = style.populateHair(stage);
 
         stage_text.setText(currentstage);
 
 
-
+        //unlocks.
         if(stage == 5){
 
             imgunlock.setVisibility(View.VISIBLE);

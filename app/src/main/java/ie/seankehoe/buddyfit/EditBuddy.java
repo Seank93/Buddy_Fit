@@ -38,7 +38,8 @@ public class EditBuddy extends AppCompatActivity {
         setContentView(R.layout.activity_edit_buddy);
         myDb = new DatabaseHelper(this);
         CharacterStyles style = new CharacterStyles();
-        hairList = style.populateHair();
+        int unlocks = Integer.parseInt(getStage());
+        hairList = style.populateHair(unlocks);
         bodyList = style.populateBody();
         headList = style.populateHead();
         setLook();
@@ -162,5 +163,16 @@ public class EditBuddy extends AppCompatActivity {
         else {
             head.setImageResource(headList.get(headvar));
         }
+    }
+    public String getStage() {
+        String StageString = "100";
+        Cursor stagecursor = myDb.getStage();
+        if (stagecursor.moveToFirst()) {
+            do {
+                StageString = stagecursor.getString(stagecursor.getColumnIndex("currentstage"));
+            } while (stagecursor.moveToNext());
+        }
+        stagecursor.close();
+        return StageString;
     }
 }

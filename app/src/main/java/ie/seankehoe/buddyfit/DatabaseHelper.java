@@ -94,6 +94,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
         }
     }
+
+    //Reseting all modified values
     public void deleteData(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from "+ USER_TABLE);
@@ -107,7 +109,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValuesBuddy.put(BUDDY_COL_4,1);
         contentValuesBuddy.put(BUDDY_COL_5,1);
         contentValuesBuddy.put(BUDDY_COL_6,1);
+
         db.update(BUDDY_TABLE,contentValuesBuddy, "ID =1", null);
+
+        ContentValues baseHp1 = new ContentValues();
+        ContentValues baseHp2 = new ContentValues();
+        ContentValues baseHp3 = new ContentValues();
+        ContentValues baseHp4 = new ContentValues();
+        ContentValues baseHp5 = new ContentValues();
+        ContentValues baseHp6 = new ContentValues();
+        ContentValues baseHp7 = new ContentValues();
+        baseHp1.put(ENEMY_COL_3,310);
+        db.update(ENEMY_TABLE,baseHp1,"ID =1",null);
+
+        baseHp2.put(ENEMY_COL_3,315);
+        db.update(ENEMY_TABLE,baseHp2,"ID =2",null);
+        baseHp3.put(ENEMY_COL_3,320);
+        db.update(ENEMY_TABLE,baseHp3,"ID =3",null);
+        baseHp4.put(ENEMY_COL_3,320);
+        db.update(ENEMY_TABLE,baseHp4,"ID =4",null);
+        baseHp5.put(ENEMY_COL_3,330);
+        db.update(ENEMY_TABLE,baseHp5,"ID =5",null);
+        baseHp6.put(ENEMY_COL_3,340);
+        db.update(ENEMY_TABLE,baseHp6,"ID =6",null);
+        baseHp7.put(ENEMY_COL_3,345);
+        db.update(ENEMY_TABLE,baseHp7,"ID =7",null);
 
     }
 
